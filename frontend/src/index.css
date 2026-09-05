@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #620F3C;
+    background: #620F3C;
+    color: #F5E0EC;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    min-height: 100vh;
+  }
+}
+
+/* Luxury 2-Color Theme: Deep Mulberry Plum (#620F3C) & Soft Rose Cream (#F5E0EC) */
+.glass-panel {
+  background: #4A0A2C;
+  border: 1px solid rgba(245, 224, 236, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.glass-card {
+  background: #4A0A2C;
+  border: 1px solid rgba(245, 224, 236, 0.2);
+  transition: all 0.25s ease-in-out;
+}
+
+.glass-card:hover {
+  border-color: #F5E0EC;
+  box-shadow: 0 8px 25px rgba(245, 224, 236, 0.15);
+}
+
+.gradient-text {
+  color: #F5E0EC;
+  background: none;
+  -webkit-text-fill-color: initial;
+}
