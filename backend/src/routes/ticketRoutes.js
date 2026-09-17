@@ -6,6 +6,7 @@ const {
   resendTicketEmail,
   verifyAndCheckInTicket,
   getGatekeeperStats,
+  getCheckedInHistory,
 } = require('../controllers/ticketController');
 
 // Download PDF Ticket (User or Admin)
@@ -19,5 +20,8 @@ router.post('/check-in', authenticate, authorize('admin'), verifyAndCheckInTicke
 
 // Gatekeeper Check-In Stats (Admin)
 router.get('/event/:eventId/check-in-stats', authenticate, authorize('admin'), getGatekeeperStats);
+
+// Gatekeeper Permanent Check-In Audit History from MongoDB (Admin)
+router.get('/gatekeeper/history', authenticate, authorize('admin'), getCheckedInHistory);
 
 module.exports = router;

@@ -9,24 +9,18 @@ const QRCode = require('qrcode');
 const generateTicketPDFBuffer = async (booking) => {
   return new Promise(async (resolve, reject) => {
     try {
-      // 1. Generate QR Code Image Buffer
+      // 1. Generate QR Code Image Buffer (High-contrast, bold blocks for instant optical scanning)
       const qrPayload = JSON.stringify({
         bookingCode: booking.bookingCode,
-        bookingId: booking._id,
-        eventId: booking.event._id,
-        eventTitle: booking.event.title,
-        userName: booking.user ? booking.user.name : 'Valued Attendee',
-        tierName: booking.tierName,
-        quantity: booking.quantity,
       });
 
       const qrImageBuffer = await QRCode.toBuffer(qrPayload, {
-        errorCorrectionLevel: 'H',
+        errorCorrectionLevel: 'M',
         type: 'png',
-        margin: 2,
-        width: 200,
+        margin: 1,
+        width: 250,
         color: {
-          dark: '#620F3C',
+          dark: '#000000',
           light: '#ffffff',
         },
       });
@@ -119,9 +113,13 @@ const generateTicketPDFBuffer = async (booking) => {
         currentY += 40;
       };
 
+      const seatLabel = booking.selectedSeats && booking.selectedSeats.length > 0
+        ? `${booking.tierName} [Seats: ${booking.selectedSeats.join(', ')}]`
+        : booking.tierName;
+
       addDetailField('Venue / Location', venue);
       addDetailField('Date & Time', dateTime);
-      addDetailField('Ticket Tier / Class', booking.tierName);
+      addDetailField('Ticket Tier / Seats', seatLabel);
       addDetailField('Quantity of Seats', `${booking.quantity} Ticket(s)`);
       addDetailField('Total Paid', `INR ₹${booking.totalAmount}`);
       addDetailField('Attendee Name', attendeeName);

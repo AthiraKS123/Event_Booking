@@ -63,6 +63,7 @@ const createPaymentOrder = async (req, res, next) => {
       tierId: hold.tierId,
       tierName: hold.tierName,
       quantity: hold.quantity,
+      selectedSeats: hold.selectedSeats || [],
       totalAmount: hold.totalAmount,
       razorpayOrderId: orderId,
       status: 'pending',

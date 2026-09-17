@@ -1,0 +1,9 @@
+process.env.NODE_ENV = 'test';
+process.env.PORT = '5001';
+process.env.JWT_SECRET = 'test_jwt_secret_key_for_testing_12345';
+process.env.JWT_REFRESH_SECRET = 'test_refresh_secret_key_for_testing_12345';
+process.env.JWT_EXPIRES_IN = '1h';
+process.env.JWT_REFRESH_EXPIRES_IN = '7d';
+process.env.RAZORPAY_KEY_ID = 'rzp_test_mock_123';
+process.env.RAZORPAY_KEY_SECRET = 'mock_secret_key_12345';
+process.env.MONGO_URI = 'mongodb://localhost:27017/eventbook_test';

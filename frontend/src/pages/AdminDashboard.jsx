@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import client from '../api/client';
-import { ShieldCheck, Plus, Sparkles, Trash2, Calendar, MapPin, CheckCircle2, XCircle, QrCode, UserCheck, AlertTriangle, Search, Activity } from 'lucide-react';
+import { ShieldCheck, Plus, Sparkles, Trash2, Calendar, MapPin, CheckCircle2, XCircle, QrCode, UserCheck, AlertTriangle, Search, Activity, Camera, Upload } from 'lucide-react';
+import QrScannerModal from '../components/QrScannerModal';
+import CheckInResultModal from '../components/CheckInResultModal';
+import { soundEffects } from '../utils/audioFeedback';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('events'); // 'events' | 'gatekeeper'
@@ -15,6 +18,7 @@ export default function AdminDashboard() {
   const [checkInLoading, setCheckInLoading] = useState(false);
   const [scanResult, setScanResult] = useState(null);
   const [scanHistory, setScanHistory] = useState([]);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
 
   // Event Form State
   const [title, setTitle] = useState('Sunburn Festival Goa 2026');
@@ -28,6 +32,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchEvents();
+    fetchScanHistory();
   }, []);
 
   const fetchEvents = async () => {
@@ -39,6 +44,17 @@ export default function AdminDashboard() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchScanHistory = async () => {
+    try {
+      const res = await client.get('/bookings/gatekeeper/history');
+      if (res.data?.history) {
+        setScanHistory(res.data.history);
+      }
+    } catch (err) {
+      console.warn('Could not fetch scan history:', err);
     }
   };
 
@@ -77,15 +93,40 @@ export default function AdminDashboard() {
     }
   };
 
-  // Gatekeeper Ticket Check-In Handler
-  const handleGatekeeperCheckIn = async (e) => {
-    e.preventDefault();
-    if (!checkInCode.trim()) return;
+  const handleAddSeats = async (event, tierId, amountToAdd = 10) => {
+    try {
+      setErrorMsg('');
+      setSuccessMsg('');
+      const updatedTiers = event.ticketTiers.map((t) => {
+        if (t._id === tierId) {
+          return {
+            ...t,
+            totalSeats: Number(t.totalSeats) + amountToAdd,
+            availableSeats: Number(t.availableSeats) + amountToAdd,
+          };
+        }
+        return t;
+      });
+
+      await client.put(`/admin/events/${event._id}`, {
+        ticketTiers: updatedTiers,
+      });
+
+      setSuccessMsg(`✅ Added +${amountToAdd} seats to ${event.title}!`);
+      fetchEvents();
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message || 'Failed to increase seats');
+    }
+  };
+
+  // Core Gatekeeper Ticket Check-In Handler
+  const processCheckIn = async (rawCode) => {
+    if (!rawCode || !rawCode.trim()) return;
 
     setCheckInLoading(true);
     setScanResult(null);
 
-    let codeToSubmit = checkInCode.trim();
+    let codeToSubmit = rawCode.trim();
     if (codeToSubmit.startsWith('{')) {
       try {
         const parsed = JSON.parse(codeToSubmit);
@@ -110,6 +151,8 @@ export default function AdminDashboard() {
       setScanResult(resultObj);
       setScanHistory((prev) => [resultObj, ...prev]);
       setCheckInCode('');
+      // Audio chime: success
+      soundEffects.playSuccess();
     } catch (err) {
       const errMsg = err.response?.data?.message || 'Verification Failed';
       const isDuplicate = errMsg.includes('ALREADY CHECKED IN');
@@ -123,38 +166,50 @@ export default function AdminDashboard() {
 
       setScanResult(resultObj);
       setScanHistory((prev) => [resultObj, ...prev]);
+      
+      // Audio chime: warning for duplicate, error for invalid
+      if (isDuplicate) {
+        soundEffects.playWarning();
+      } else {
+        soundEffects.playError();
+      }
     } finally {
       setCheckInLoading(false);
     }
   };
 
+  const handleGatekeeperCheckIn = async (e) => {
+    e.preventDefault();
+    processCheckIn(checkInCode);
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-8 rounded-2xl bg-[#4A0A2C] border border-[#F5E0EC]/30">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-8 rounded-3xl bg-white border border-[#620F3C]/12 shadow-sm">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#F5E0EC]/20 text-[#F5E0EC] border border-[#F5E0EC]/30 text-xs font-semibold mb-2">
-            <ShieldCheck className="w-4 h-4 text-[#F5E0EC]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5E0EC] text-[#620F3C] border border-[#620F3C]/20 text-xs font-bold mb-2 shadow-sm">
+            <ShieldCheck className="w-4 h-4 text-[#620F3C]" />
             Protected Admin & Gatekeeper Dashboard
           </div>
-          <h1 className="text-2xl font-bold text-[#F5E0EC]">Admin Management Console</h1>
-          <p className="text-[#F5E0EC]/70 text-sm">Manage events, monitor live inventory, and verify attendee QR entry passes</p>
+          <h1 className="text-2xl font-bold text-[#2A081C]">Admin Management Console</h1>
+          <p className="text-[#6E455E] text-sm">Manage events, monitor live inventory, and verify attendee QR entry passes</p>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex bg-[#32061D] p-1 rounded-xl border border-[#F5E0EC]/20 shrink-0">
+        <div className="flex bg-[#FAF6F9] p-1 rounded-2xl border border-[#620F3C]/15 shrink-0 shadow-sm">
           <button
             onClick={() => setActiveTab('events')}
-            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'events' ? 'bg-[#F5E0EC] text-[#620F3C]' : 'text-[#F5E0EC]/70 hover:text-[#F5E0EC]'
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'events' ? 'bg-[#620F3C] text-white shadow-sm' : 'text-[#6E455E] hover:text-[#620F3C]'
             }`}
           >
             Events & Inventory
           </button>
           <button
             onClick={() => setActiveTab('gatekeeper')}
-            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'gatekeeper' ? 'bg-[#F5E0EC] text-[#620F3C]' : 'text-[#F5E0EC]/70 hover:text-[#F5E0EC]'
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'gatekeeper' ? 'bg-[#620F3C] text-white shadow-sm' : 'text-[#6E455E] hover:text-[#620F3C]'
             }`}
           >
             <QrCode className="w-3.5 h-3.5" />
@@ -164,15 +219,15 @@ export default function AdminDashboard() {
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-[#4A0A2C] border border-[#F5E0EC]/30 text-[#F5E0EC] flex items-center gap-3 text-sm">
-          <XCircle className="w-5 h-5 text-[#F5E0EC]/70 shrink-0" />
+        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 flex items-center gap-3 text-sm">
+          <XCircle className="w-5 h-5 text-red-500 shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-[#4A0A2C] border border-[#F5E0EC]/40 text-[#F5E0EC] flex items-center gap-3 text-sm">
-          <CheckCircle2 className="w-5 h-5 text-[#F5E0EC] shrink-0" />
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-3 text-sm">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -180,33 +235,43 @@ export default function AdminDashboard() {
       {/* TAB 1: GATEKEEPER CHECK-IN SYSTEM */}
       {activeTab === 'gatekeeper' && (
         <div className="space-y-6">
-          <div className="p-6 sm:p-8 rounded-2xl bg-[#4A0A2C] border border-[#F5E0EC]/30 space-y-6">
-            <div className="flex items-center justify-between">
+          <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#620F3C]/12 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-lg font-bold text-[#F5E0EC] flex items-center gap-2">
-                  <UserCheck className="w-5 h-5 text-[#F5E0EC]" />
+                <h3 className="text-lg font-bold text-[#2A081C] flex items-center gap-2">
+                  <UserCheck className="w-5 h-5 text-[#620F3C]" />
                   Gatekeeper Venue Entrance Check-In
                 </h3>
-                <p className="text-xs text-[#F5E0EC]/70">Scan QR codes or enter ticket code (EB-XXXXXX) to validate attendee entry pass</p>
+                <p className="text-xs text-[#6E455E]">Scan ticket QR codes via live camera or enter code manually</p>
               </div>
+
+              {/* Action Button to launch live camera scanner */}
+              <button
+                type="button"
+                onClick={() => setIsScannerOpen(true)}
+                className="px-5 py-2.5 rounded-xl bg-[#620F3C] hover:bg-[#4E0B2F] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer transform hover:scale-[1.02]"
+              >
+                <Camera className="w-4 h-4 text-white" />
+                <span>📷 Open Live Camera QR Scanner</span>
+              </button>
             </div>
 
             <form onSubmit={handleGatekeeperCheckIn} className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1">
-                <Search className="w-5 h-5 text-[#F5E0EC]/50 absolute left-4 top-3.5" />
+                <Search className="w-5 h-5 text-gray-400 absolute left-4 top-3.5" />
                 <input
                   type="text"
                   placeholder="Enter Ticket Booking Code (e.g. EB-X7A89) or paste QR payload..."
                   value={checkInCode}
                   onChange={(e) => setCheckInCode(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 rounded-xl bg-[#32061D] border border-[#F5E0EC]/30 text-[#F5E0EC] text-sm font-mono placeholder:font-sans focus:outline-none focus:border-[#F5E0EC]"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm font-mono placeholder:font-sans focus:outline-none focus:border-[#620F3C]"
                   required
                 />
               </div>
               <button
                 type="submit"
                 disabled={checkInLoading}
-                className="px-6 py-3 rounded-xl bg-[#F5E0EC] hover:bg-[#e7cadb] text-[#620F3C] font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50"
+                className="px-6 py-3 rounded-xl bg-[#F5E0EC] hover:bg-[#edd1e3] text-[#620F3C] font-extrabold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all border border-[#620F3C]/20 shadow-sm disabled:opacity-50"
               >
                 {checkInLoading ? 'Verifying Ticket...' : 'Verify & Grant Entry'}
               </button>
@@ -216,55 +281,55 @@ export default function AdminDashboard() {
             {scanResult && (
               <div className="animate-scaleUp">
                 {scanResult.status === 'SUCCESS' && (
-                  <div className="p-6 rounded-xl bg-[#32061D] border-2 border-[#F5E0EC] text-[#F5E0EC] space-y-3">
+                  <div className="p-6 rounded-2xl bg-emerald-50 border-2 border-emerald-400 text-emerald-950 space-y-3 shadow-sm">
                     <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-8 h-8 text-[#F5E0EC] shrink-0" />
+                      <CheckCircle2 className="w-8 h-8 text-emerald-600 shrink-0" />
                       <div>
-                        <div className="text-xl font-bold text-[#F5E0EC]">🎉 ENTRY GRANTED!</div>
-                        <div className="text-xs text-[#F5E0EC]/80">{scanResult.message}</div>
+                        <div className="text-xl font-bold text-emerald-900">🎉 ENTRY GRANTED!</div>
+                        <div className="text-xs text-emerald-800">{scanResult.message}</div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 rounded-lg bg-[#4A0A2C] border border-[#F5E0EC]/20 text-xs">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 rounded-xl bg-white border border-emerald-200 text-xs">
                       <div>
-                        <span className="text-[#F5E0EC]/60 block text-[10px]">Attendee Name</span>
-                        <span className="font-bold text-[#F5E0EC]">{scanResult.booking.attendeeName}</span>
+                        <span className="text-emerald-700 block text-[10px] uppercase font-bold">Attendee Name</span>
+                        <span className="font-bold text-emerald-950">{scanResult.booking.attendeeName}</span>
                       </div>
                       <div>
-                        <span className="text-[#F5E0EC]/60 block text-[10px]">Event Title</span>
-                        <span className="font-bold text-[#F5E0EC]">{scanResult.booking.eventTitle}</span>
+                        <span className="text-emerald-700 block text-[10px] uppercase font-bold">Event Title</span>
+                        <span className="font-bold text-emerald-950">{scanResult.booking.eventTitle}</span>
                       </div>
                       <div>
-                        <span className="text-[#F5E0EC]/60 block text-[10px]">Ticket Tier & Seats</span>
-                        <span className="font-bold text-[#F5E0EC]">{scanResult.booking.tierName} ({scanResult.booking.quantity} seats)</span>
+                        <span className="text-emerald-700 block text-[10px] uppercase font-bold">Ticket Tier & Seats</span>
+                        <span className="font-bold text-emerald-950">{scanResult.booking.tierName} ({scanResult.booking.quantity} seats)</span>
                       </div>
                       <div>
-                        <span className="text-[#F5E0EC]/60 block text-[10px]">Check-In Time</span>
-                        <span className="font-bold text-[#F5E0EC]">{new Date(scanResult.booking.checkedInAt).toLocaleTimeString()}</span>
+                        <span className="text-emerald-700 block text-[10px] uppercase font-bold">Check-In Time</span>
+                        <span className="font-bold text-emerald-950">{new Date(scanResult.booking.checkedInAt).toLocaleTimeString()}</span>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {scanResult.status === 'DUPLICATE' && (
-                  <div className="p-6 rounded-xl bg-[#32061D] border-2 border-[#F5E0EC]/40 text-[#F5E0EC] space-y-3">
+                  <div className="p-6 rounded-2xl bg-amber-50 border-2 border-amber-400 text-amber-950 space-y-3 shadow-sm">
                     <div className="flex items-center gap-3">
-                      <AlertTriangle className="w-8 h-8 text-[#F5E0EC] shrink-0" />
+                      <AlertTriangle className="w-8 h-8 text-amber-600 shrink-0" />
                       <div>
-                        <div className="text-xl font-bold text-[#F5E0EC]">⚠️ DUPLICATE ENTRY ATTEMPT DETECTED!</div>
-                        <div className="text-xs text-[#F5E0EC]/70">{scanResult.message}</div>
+                        <div className="text-xl font-bold text-amber-900">⚠️ DUPLICATE ENTRY ATTEMPT DETECTED!</div>
+                        <div className="text-xs text-amber-800">{scanResult.message}</div>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {scanResult.status === 'INVALID' && (
-                  <div className="p-6 rounded-xl bg-[#32061D] border-2 border-[#F5E0EC]/40 text-[#F5E0EC] space-y-2">
+                  <div className="p-6 rounded-2xl bg-red-50 border-2 border-red-400 text-red-950 space-y-2 shadow-sm">
                     <div className="flex items-center gap-3">
-                      <XCircle className="w-8 h-8 text-[#F5E0EC] shrink-0" />
+                      <XCircle className="w-8 h-8 text-red-600 shrink-0" />
                       <div>
-                        <div className="text-xl font-bold text-[#F5E0EC]">🛑 INVALID TICKET / ACCESS DENIED</div>
-                        <div className="text-xs text-[#F5E0EC]/70">{scanResult.message}</div>
+                        <div className="text-xl font-bold text-red-900">🛑 INVALID TICKET / ACCESS DENIED</div>
+                        <div className="text-xs text-red-800">{scanResult.message}</div>
                       </div>
                     </div>
                   </div>
@@ -275,23 +340,23 @@ export default function AdminDashboard() {
 
           {/* Scan History Feed */}
           {scanHistory.length > 0 && (
-            <div className="p-6 rounded-2xl bg-[#4A0A2C] border border-[#F5E0EC]/20 space-y-4">
-              <h4 className="text-sm font-bold text-[#F5E0EC] flex items-center gap-2">
-                <Activity className="w-4 h-4 text-[#F5E0EC]" />
+            <div className="p-6 rounded-3xl bg-white border border-[#620F3C]/12 shadow-sm space-y-4">
+              <h4 className="text-sm font-bold text-[#2A081C] flex items-center gap-2">
+                <Activity className="w-4 h-4 text-[#620F3C]" />
                 Live Gate Scan History Feed ({scanHistory.length})
               </h4>
               <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                 {scanHistory.map((scan, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center justify-between p-3 rounded-xl bg-[#32061D] border border-[#F5E0EC]/20 text-xs font-semibold text-[#F5E0EC]"
+                    className="flex items-center justify-between p-3 rounded-xl bg-[#FAF6F9] border border-[#620F3C]/10 text-xs font-semibold text-[#2A081C]"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-[#F5E0EC]">{scan.bookingCode || scan.booking?.bookingCode}</span>
+                      <span className="font-mono text-[#620F3C] font-bold">{scan.bookingCode || scan.booking?.bookingCode}</span>
                       <span>•</span>
                       <span>{scan.status}</span>
                     </div>
-                    <span className="text-[#F5E0EC]/60 text-[10px]">{scan.timestamp}</span>
+                    <span className="text-[#6E455E] text-[10px]">{scan.timestamp}</span>
                   </div>
                 ))}
               </div>
@@ -304,100 +369,100 @@ export default function AdminDashboard() {
       {activeTab === 'events' && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-[#F5E0EC] flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#F5E0EC]" />
+            <h2 className="text-lg font-bold text-[#2A081C] flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#620F3C]" />
               Published Events Catalog ({events.length})
             </h2>
             <button
               onClick={() => setShowForm(!showForm)}
-              className="px-4 py-2 rounded-xl bg-[#F5E0EC] hover:bg-[#e7cadb] text-[#620F3C] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#620F3C] hover:bg-[#4E0B2F] text-white font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-md"
             >
-              <Plus className="w-4 h-4 text-[#620F3C]" />
+              <Plus className="w-4 h-4 text-white" />
               {showForm ? 'Cancel Form' : 'Publish New Event'}
             </button>
           </div>
 
           {/* Create Event Form Modal / Expandable Card */}
           {showForm && (
-            <div className="p-6 rounded-2xl bg-[#4A0A2C] border border-[#F5E0EC]/30 space-y-4 animate-fadeIn">
-              <h3 className="text-base font-bold text-[#F5E0EC]">Publish New Event with Tier Capacities</h3>
+            <div className="p-6 rounded-3xl bg-white border border-[#620F3C]/15 shadow-md space-y-4 animate-fadeIn">
+              <h3 className="text-base font-bold text-[#2A081C]">Publish New Event with Tier Capacities</h3>
               <form onSubmit={handleCreateEvent} className="space-y-4 text-xs">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[#F5E0EC]/80 mb-1 font-semibold">Event Title</label>
+                    <label className="block text-[#2A081C] mb-1 font-bold">Event Title</label>
                     <input
                       type="text"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-[#32061D] border border-[#F5E0EC]/30 text-[#F5E0EC] text-sm focus:outline-none focus:border-[#F5E0EC]"
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm focus:outline-none focus:border-[#620F3C]"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-[#F5E0EC]/80 mb-1 font-semibold">Venue Location</label>
+                    <label className="block text-[#2A081C] mb-1 font-bold">Venue Location</label>
                     <input
                       type="text"
                       value={venue}
                       onChange={(e) => setVenue(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-[#32061D] border border-[#F5E0EC]/30 text-[#F5E0EC] text-sm focus:outline-none focus:border-[#F5E0EC]"
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm focus:outline-none focus:border-[#620F3C]"
                       required
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[#F5E0EC]/80 mb-1 font-semibold">Description</label>
+                  <label className="block text-[#2A081C] mb-1 font-bold">Description</label>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-[#32061D] border border-[#F5E0EC]/30 text-[#F5E0EC] text-sm focus:outline-none focus:border-[#F5E0EC]"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm focus:outline-none focus:border-[#620F3C]"
                     rows="2"
                     required
                   />
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-[#32061D] border border-[#F5E0EC]/20">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-[#FAF6F9] border border-[#620F3C]/12">
                   <div>
-                    <label className="block text-[#F5E0EC]/80 mb-1 font-semibold">VIP Price (₹)</label>
+                    <label className="block text-[#6E455E] mb-1 font-bold">VIP Price (₹)</label>
                     <input
                       type="number"
                       value={vipPrice}
                       onChange={(e) => setVipPrice(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-lg bg-[#4A0A2C] border border-[#F5E0EC]/30 text-[#F5E0EC] font-bold"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#620F3C]/25 text-[#2A081C] font-bold focus:border-[#620F3C]"
                     />
                   </div>
                   <div>
-                    <label className="block text-[#F5E0EC]/80 mb-1 font-semibold">VIP Capacity</label>
+                    <label className="block text-[#6E455E] mb-1 font-bold">VIP Capacity</label>
                     <input
                       type="number"
                       value={vipCapacity}
                       onChange={(e) => setVipCapacity(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-lg bg-[#4A0A2C] border border-[#F5E0EC]/30 text-[#F5E0EC] font-bold"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#620F3C]/25 text-[#2A081C] font-bold focus:border-[#620F3C]"
                     />
                   </div>
                   <div>
-                    <label className="block text-[#F5E0EC]/80 mb-1 font-semibold">General Price (₹)</label>
+                    <label className="block text-[#6E455E] mb-1 font-bold">General Price (₹)</label>
                     <input
                       type="number"
                       value={genPrice}
                       onChange={(e) => setGenPrice(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-lg bg-[#4A0A2C] border border-[#F5E0EC]/30 text-[#F5E0EC] font-bold"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#620F3C]/25 text-[#2A081C] font-bold focus:border-[#620F3C]"
                     />
                   </div>
                   <div>
-                    <label className="block text-[#F5E0EC]/80 mb-1 font-semibold">General Capacity</label>
+                    <label className="block text-[#6E455E] mb-1 font-bold">General Capacity</label>
                     <input
                       type="number"
                       value={genCapacity}
                       onChange={(e) => setGenCapacity(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-lg bg-[#4A0A2C] border border-[#F5E0EC]/30 text-[#F5E0EC] font-bold"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#620F3C]/25 text-[#2A081C] font-bold focus:border-[#620F3C]"
                     />
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-[#F5E0EC] hover:bg-[#e7cadb] text-[#620F3C] font-bold text-sm shadow-md cursor-pointer"
+                  className="w-full py-3 rounded-xl bg-[#620F3C] hover:bg-[#4E0B2F] text-white font-bold text-sm shadow-md cursor-pointer transition-all"
                 >
                   Confirm & Create Event
                 </button>
@@ -408,38 +473,50 @@ export default function AdminDashboard() {
           {/* Events Catalog Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {events.map((event) => (
-              <div key={event._id} className="bg-[#4A0A2C] rounded-2xl overflow-hidden border border-[#F5E0EC]/25 p-6 flex flex-col justify-between space-y-4">
+              <div key={event._id} className="bg-white rounded-3xl overflow-hidden border border-[#620F3C]/12 shadow-sm p-6 flex flex-col justify-between space-y-4">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-[#F5E0EC]">{event.title}</h3>
+                    <h3 className="text-lg font-bold text-[#2A081C]">{event.title}</h3>
                     <button
                       onClick={() => handleDeleteEvent(event._id)}
-                      className="p-2 rounded-xl bg-[#32061D] hover:bg-[#4A0A2C] text-[#F5E0EC]/70 border border-[#F5E0EC]/20 transition-colors cursor-pointer"
+                      className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors cursor-pointer"
                       title="Delete Event"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
 
-                  <div className="space-y-1 text-xs text-[#F5E0EC]/70">
+                  <div className="space-y-1 text-xs text-[#6E455E]">
                     <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-[#F5E0EC] shrink-0" />
-                      <span>{event.venue}</span>
+                      <MapPin className="w-3.5 h-3.5 text-[#620F3C] shrink-0" />
+                      <span className="font-medium">{event.venue}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-[#F5E0EC] shrink-0" />
-                      <span>{new Date(event.dateTime).toLocaleDateString()}</span>
+                      <Calendar className="w-3.5 h-3.5 text-[#620F3C] shrink-0" />
+                      <span className="font-medium">{new Date(event.dateTime).toLocaleDateString()}</span>
                     </div>
                   </div>
 
-                  <div className="space-y-2 pt-2 border-t border-[#F5E0EC]/20 text-xs">
-                    <div className="text-[10px] font-bold text-[#F5E0EC]/60 uppercase tracking-wider">Live Inventory Status</div>
+                  <div className="space-y-2 pt-2 border-t border-[#620F3C]/10 text-xs">
+                    <div className="text-[10px] font-bold text-[#6E455E] uppercase tracking-wider">Live Inventory Status</div>
                     {event.ticketTiers.map((tier) => (
-                      <div key={tier._id} className="flex justify-between items-center p-2 rounded-xl bg-[#32061D] border border-[#F5E0EC]/20">
-                        <span className="font-semibold text-[#F5E0EC]">{tier.name}</span>
-                        <div className="flex items-center gap-3">
-                          <span className="text-[#F5E0EC] font-bold">₹{tier.price}</span>
-                          <span className="text-[#F5E0EC]/80 font-medium">{tier.availableSeats} / {tier.totalSeats} left</span>
+                      <div key={tier._id} className="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl bg-[#FAF6F9] border border-[#620F3C]/10 gap-2">
+                        <div>
+                          <span className="font-bold text-[#2A081C]">{tier.name}</span>
+                          <span className="text-[#620F3C] font-black text-[11px] ml-2">₹{tier.price}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[#6E455E] font-medium text-[11px]">
+                            {tier.availableSeats} / {tier.totalSeats} left
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleAddSeats(event, tier._id, 10)}
+                            className="px-2.5 py-1 rounded-lg bg-[#620F3C] hover:bg-[#4E0B2F] text-white text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+                            title="Add 10 seats to this tier"
+                          >
+                            <Plus className="w-3 h-3" /> +10 Seats
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -450,6 +527,26 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
+
+      {/* Live Camera QR Scanner Modal */}
+      <QrScannerModal
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+        onScanSuccess={(decodedText) => {
+          setIsScannerOpen(false);
+          processCheckIn(decodedText);
+        }}
+      />
+
+      {/* Entry Granted / Security Alert Result Popup Modal */}
+      <CheckInResultModal
+        result={scanResult}
+        onClose={() => setScanResult(null)}
+        onScanNext={() => {
+          setScanResult(null);
+          setIsScannerOpen(true);
+        }}
+      />
     </div>
   );
 }

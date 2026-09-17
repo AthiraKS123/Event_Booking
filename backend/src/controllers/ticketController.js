@@ -191,9 +191,50 @@ const getGatekeeperStats = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc    Get All Checked-In Attendees History from Database
+ * @route   GET /api/bookings/gatekeeper/history
+ * @access  Private (Admin / Gatekeeper)
+ */
+const getCheckedInHistory = async (req, res, next) => {
+  try {
+    const checkedInBookings = await Booking.find({ status: 'confirmed', isCheckedIn: true })
+      .populate('event', 'title venue dateTime category')
+      .populate('user', 'name email')
+      .sort({ checkedInAt: -1 })
+      .limit(50);
+
+    const formattedHistory = checkedInBookings.map((b) => ({
+      status: 'SUCCESS',
+      message: 'Verified Entry Pass in Database',
+      booking: {
+        id: b._id,
+        bookingCode: b.bookingCode,
+        attendeeName: b.user ? b.user.name : 'Attendee',
+        attendeeEmail: b.user ? b.user.email : 'N/A',
+        eventTitle: b.event ? b.event.title : 'Event Pass',
+        venue: b.event ? b.event.venue : 'Main Gate',
+        tierName: b.tierName,
+        quantity: b.quantity,
+        checkedInAt: b.checkedInAt,
+      },
+      timestamp: new Date(b.checkedInAt).toLocaleTimeString(),
+    }));
+
+    res.status(200).json({
+      success: true,
+      count: formattedHistory.length,
+      history: formattedHistory,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   downloadTicketPDF,
   resendTicketEmail,
   verifyAndCheckInTicket,
   getGatekeeperStats,
+  getCheckedInHistory,
 };

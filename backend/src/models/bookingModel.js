@@ -30,6 +30,10 @@ const bookingSchema = new mongoose.Schema(
       required: true,
       min: 1,
     },
+    selectedSeats: {
+      type: [String],
+      default: [],
+    },
     totalAmount: {
       type: Number,
       required: true,

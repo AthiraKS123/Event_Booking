@@ -7,6 +7,8 @@
  */
 
 const Event = require('../models/eventModel');
+const SeatHold = require('../models/seatHoldModel');
+const Booking = require('../models/bookingModel');
 
 /**
  * @desc    Create a new event (Admin only)
@@ -59,7 +61,7 @@ const createEvent = async (req, res, next) => {
  */
 const getEvents = async (req, res, next) => {
   try {
-    const { category, search } = req.query;
+    const { category, search, sort, timeframe } = req.query;
     const filter = { status: 'published' };
 
     if (category && category !== 'All') {
@@ -71,13 +73,46 @@ const getEvents = async (req, res, next) => {
       filter.$or = [
         { title: searchRegex },
         { venue: searchRegex },
-        { description: searchRegex }
+        { description: searchRegex },
       ];
     }
 
-    const events = await Event.find(filter)
-      .populate('createdBy', 'name email')
-      .sort({ dateTime: 1 });
+    // Timeframe filtering
+    const now = new Date();
+    if (timeframe === 'weekend') {
+      // Upcoming weekend (Friday to Sunday)
+      const dayOfWeek = now.getDay();
+      const daysUntilFriday = (5 - dayOfWeek + 7) % 7;
+      const friday = new Date(now);
+      friday.setDate(now.getDate() + daysUntilFriday);
+      friday.setHours(0, 0, 0, 0);
+
+      const sunday = new Date(friday);
+      sunday.setDate(friday.getDate() + 2);
+      sunday.setHours(23, 59, 59, 999);
+
+      filter.dateTime = { $gte: now, $lte: sunday };
+    } else if (timeframe === 'month') {
+      const nextMonth = new Date(now);
+      nextMonth.setDate(now.getDate() + 30);
+      filter.dateTime = { $gte: now, $lte: nextMonth };
+    }
+
+    let query = Event.find(filter).populate('createdBy', 'name email');
+
+    // Sorting
+    if (sort === 'date_desc') {
+      query = query.sort({ dateTime: -1 });
+    } else if (sort === 'price_asc') {
+      query = query.sort({ 'ticketTiers.0.price': 1 });
+    } else if (sort === 'price_desc') {
+      query = query.sort({ 'ticketTiers.0.price': -1 });
+    } else {
+      // Default: date_asc (Upcoming first)
+      query = query.sort({ dateTime: 1 });
+    }
+
+    const events = await query;
 
     res.status(200).json({
       success: true,
@@ -103,9 +138,45 @@ const getEventById = async (req, res, next) => {
       return next(new Error('Event not found'));
     }
 
+    // Find all active holds for this event
+    const activeHolds = await SeatHold.find({
+      event: event._id,
+      status: 'held',
+      expiresAt: { $gt: new Date() },
+    });
+
+    // Find all confirmed bookings for this event
+    const confirmedBookings = await Booking.find({
+      event: event._id,
+      status: 'confirmed',
+    });
+
+    const occupiedSeatsByTier = {};
+    activeHolds.forEach((h) => {
+      const tierIdStr = h.tierId.toString();
+      if (!occupiedSeatsByTier[tierIdStr]) occupiedSeatsByTier[tierIdStr] = [];
+      if (h.selectedSeats && h.selectedSeats.length > 0) {
+        occupiedSeatsByTier[tierIdStr].push(...h.selectedSeats);
+      }
+    });
+
+    confirmedBookings.forEach((b) => {
+      const tierIdStr = b.tierId.toString();
+      if (!occupiedSeatsByTier[tierIdStr]) occupiedSeatsByTier[tierIdStr] = [];
+      if (b.selectedSeats && b.selectedSeats.length > 0) {
+        occupiedSeatsByTier[tierIdStr].push(...b.selectedSeats);
+      }
+    });
+
+    const eventObj = event.toObject();
+    eventObj.ticketTiers = eventObj.ticketTiers.map((t) => ({
+      ...t,
+      occupiedSeats: occupiedSeatsByTier[t._id.toString()] || [],
+    }));
+
     res.status(200).json({
       success: true,
-      event,
+      event: eventObj,
     });
   } catch (error) {
     next(error);

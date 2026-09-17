@@ -33,12 +33,12 @@ const HoldTimer = ({ expiresAt, onExpire }) => {
   const isUrgent = timeLeft > 0 && timeLeft < 120;
 
   return (
-    <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+    <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors shadow-sm ${
       isUrgent
-        ? 'bg-[#F5E0EC] text-[#620F3C] border border-[#F5E0EC] animate-pulse shadow-lg'
-        : 'bg-[#4A0A2C] text-[#F5E0EC] border border-[#F5E0EC]/40'
+        ? 'bg-amber-100 text-amber-900 border border-amber-400 animate-pulse'
+        : 'bg-[#FAF6F9] text-[#620F3C] border border-[#620F3C]/20'
     }`}>
-      {isUrgent ? <AlertTriangle className="w-4 h-4 text-[#620F3C]" /> : <Clock className="w-4 h-4 text-[#F5E0EC]" />}
+      {isUrgent ? <AlertTriangle className="w-4 h-4 text-amber-700" /> : <Clock className="w-4 h-4 text-[#620F3C]" />}
       <span>Hold Expires in: <span className="font-mono text-base ml-1 font-black tracking-wider">{formattedTime}</span></span>
     </div>
   );

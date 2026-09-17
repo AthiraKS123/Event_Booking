@@ -36,6 +36,10 @@ const seatHoldSchema = new mongoose.Schema(
       required: true,
       min: [1, 'Must hold at least 1 seat'],
     },
+    selectedSeats: {
+      type: [String],
+      default: [],
+    },
     pricePerSeat: {
       type: Number,
       required: true,

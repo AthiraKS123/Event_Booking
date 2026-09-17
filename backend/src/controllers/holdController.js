@@ -20,7 +20,7 @@ const HOLD_DURATION_MINUTES = 10;
  */
 const holdSeats = async (req, res, next) => {
   try {
-    const { eventId, tierId, quantity } = req.body;
+    const { eventId, tierId, quantity, selectedSeats } = req.body;
     const requestedQuantity = Number(quantity);
 
     // 1. Basic Input Validation
@@ -44,16 +44,7 @@ const holdSeats = async (req, res, next) => {
 
     /*
      * -----------------------------------------------------------------------
-     * 🔴 NAIVE BUGGY APPROACH (DO NOT USE IN PRODUCTION):
-     * 
-     * if (tier.availableSeats >= requestedQuantity) {
-     *    tier.availableSeats -= requestedQuantity;
-     *    await event.save(); // ❌ Vulnerable to race conditions under parallel requests!
-     * }
-     * -----------------------------------------------------------------------
-     * 🟢 ATOMIC CONCURRENCY APPROACH (USED HERE):
-     * 
-     * We issue 1 single indivisible operation to MongoDB:
+     * 🟢 ATOMIC CONCURRENCY APPROACH:
      * Condition: Match tier ONLY IF availableSeats >= requestedQuantity
      * Action: Atomically decrement availableSeats by requestedQuantity
      * -----------------------------------------------------------------------
@@ -92,6 +83,7 @@ const holdSeats = async (req, res, next) => {
       tierId: tier._id,
       tierName: tier.name,
       quantity: requestedQuantity,
+      selectedSeats: Array.isArray(selectedSeats) ? selectedSeats : [],
       pricePerSeat: tier.price,
       totalAmount,
       status: 'held',
@@ -109,6 +101,8 @@ const holdSeats = async (req, res, next) => {
         eventTitle: event.title,
         tierName: savedHold.tierName,
         quantity: savedHold.quantity,
+        selectedSeats: savedHold.selectedSeats,
+        pricePerSeat: savedHold.pricePerSeat,
         totalAmount: savedHold.totalAmount,
         expiresAt: savedHold.expiresAt,
         status: savedHold.status,

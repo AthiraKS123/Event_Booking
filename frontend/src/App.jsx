@@ -30,7 +30,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#620F3C] text-[#F5E0EC] font-sans pb-16">
+    <div className="min-h-screen bg-[#FAF6F9] text-[#2A081C] font-sans pb-16">
       <Navbar currentUser={currentUser} onLogout={handleLogout} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <Routes>

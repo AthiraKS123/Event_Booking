@@ -66,50 +66,50 @@ export default function LoginPage({ onLoginSuccess }) {
     <div className="max-w-md mx-auto py-10 space-y-6">
       <div className="text-center space-y-2">
         {isAdminRoute ? (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5E0EC]/20 text-[#F5E0EC] border border-[#F5E0EC]/30 text-xs font-bold mb-2">
-            <ShieldCheck className="w-4 h-4 text-[#F5E0EC]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5E0EC] text-[#620F3C] border border-[#620F3C]/20 text-xs font-bold mb-2 shadow-sm">
+            <ShieldCheck className="w-4 h-4 text-[#620F3C]" />
             Admin Sign In Portal (/admin/login)
           </div>
         ) : (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5E0EC]/20 text-[#F5E0EC] border border-[#F5E0EC]/30 text-xs font-bold mb-2">
-            <User className="w-4 h-4 text-[#F5E0EC]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5E0EC] text-[#620F3C] border border-[#620F3C]/20 text-xs font-bold mb-2 shadow-sm">
+            <User className="w-4 h-4 text-[#620F3C]" />
             User Sign In Portal (/login)
           </div>
         )}
-        <h1 className="text-3xl font-bold text-[#F5E0EC]">
+        <h1 className="text-3xl font-bold text-[#2A081C]">
           {isAdminRoute ? 'Admin Sign In' : 'Sign In to EventBook'}
         </h1>
-        <p className="text-[#F5E0EC]/70 text-sm">Enter your credentials to access live event seat holding</p>
+        <p className="text-[#6E455E] text-sm">Enter your credentials to access live event seat holding</p>
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-[#4A0A2C] border border-[#F5E0EC]/30 text-[#F5E0EC] flex items-center gap-3 text-sm">
-          <XCircle className="w-5 h-5 text-[#F5E0EC]/70 shrink-0" />
+        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 flex items-center gap-3 text-sm">
+          <XCircle className="w-5 h-5 text-red-500 shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
-      <div className="p-6 rounded-2xl bg-[#4A0A2C] border border-[#F5E0EC]/25 space-y-6">
+      <div className="p-6 rounded-3xl bg-white border border-[#620F3C]/12 shadow-md space-y-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-[#F5E0EC]/80 mb-1">Email Address</label>
+            <label className="block text-xs font-bold text-[#2A081C] mb-1">Email Address</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-[#32061D] border border-[#F5E0EC]/30 text-[#F5E0EC] text-sm focus:outline-none focus:border-[#F5E0EC]"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm focus:outline-none focus:border-[#620F3C]"
               placeholder="e.g. user@example.com"
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#F5E0EC]/80 mb-1">Password</label>
+            <label className="block text-xs font-bold text-[#2A081C] mb-1">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-[#32061D] border border-[#F5E0EC]/30 text-[#F5E0EC] text-sm focus:outline-none focus:border-[#F5E0EC]"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm focus:outline-none focus:border-[#620F3C]"
               placeholder="Enter your password"
               required
             />
@@ -118,39 +118,39 @@ export default function LoginPage({ onLoginSuccess }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-[#F5E0EC] hover:bg-[#e7cadb] text-[#620F3C] font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 rounded-xl bg-[#620F3C] hover:bg-[#4E0B2F] text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
           >
-            <Lock className="w-4 h-4 text-[#620F3C]" />
+            <Lock className="w-4 h-4 text-white" />
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
         <div className="relative flex py-2 items-center">
-          <div className="flex-grow border-t border-[#F5E0EC]/20"></div>
-          <span className="flex-shrink mx-4 text-xs text-[#F5E0EC]/70 font-semibold uppercase">Or 1-Click Quick Demo Login</span>
-          <div className="flex-grow border-t border-[#F5E0EC]/20"></div>
+          <div className="flex-grow border-t border-[#620F3C]/10"></div>
+          <span className="flex-shrink mx-4 text-xs text-[#6E455E] font-semibold uppercase">Or 1-Click Quick Demo Login</span>
+          <div className="flex-grow border-t border-[#620F3C]/10"></div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => handleQuickLogin('user')}
-            className="py-2.5 rounded-xl bg-[#32061D] hover:bg-[#4A0A2C] text-[#F5E0EC] border border-[#F5E0EC]/30 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+            className="py-2.5 rounded-xl bg-[#FAF6F9] hover:bg-[#F5E0EC] text-[#620F3C] border border-[#620F3C]/20 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-all"
           >
-            <User className="w-3.5 h-3.5" />
+            <User className="w-3.5 h-3.5 text-[#620F3C]" />
             User Demo
           </button>
           <button
             onClick={() => handleQuickLogin('admin')}
-            className="py-2.5 rounded-xl bg-[#32061D] hover:bg-[#4A0A2C] text-[#F5E0EC] border border-[#F5E0EC]/30 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+            className="py-2.5 rounded-xl bg-[#FAF6F9] hover:bg-[#F5E0EC] text-[#620F3C] border border-[#620F3C]/20 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-all"
           >
-            <ShieldCheck className="w-3.5 h-3.5" />
+            <ShieldCheck className="w-3.5 h-3.5 text-[#620F3C]" />
             Admin Demo
           </button>
         </div>
 
-        <div className="text-center text-xs text-[#F5E0EC]/70 pt-2">
+        <div className="text-center text-xs text-[#6E455E] pt-2">
           Don't have an account?{' '}
-          <Link to={isAdminRoute ? '/admin/register' : '/register'} className="text-[#F5E0EC] font-bold hover:underline">
+          <Link to={isAdminRoute ? '/admin/register' : '/register'} className="text-[#620F3C] font-bold hover:underline">
             Register here
           </Link>
         </div>
