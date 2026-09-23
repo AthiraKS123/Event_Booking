@@ -89,7 +89,7 @@ export default function MyHoldsPage() {
           contact: '9999999999',
         },
         theme: {
-          color: '#620F3C',
+          color: '#DE5D3B',
         },
       };
 
@@ -139,11 +139,11 @@ export default function MyHoldsPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#2A081C] tracking-tight flex items-center gap-2">
-            <Zap className="w-5 h-5 text-[#620F3C]" />
+          <h1 className="text-2xl font-bold text-[#1C2434] tracking-tight flex items-center gap-2">
+            <Zap className="w-5 h-5 text-[#DE5D3B]" />
             My Active 10-Minute Seat Holds
           </h1>
-          <p className="text-[#6E455E] text-xs">
+          <p className="text-[#676C75] text-xs">
             Background cron sweeper checks every 60s to auto-release holds past 10 minutes
           </p>
         </div>
@@ -164,43 +164,43 @@ export default function MyHoldsPage() {
       )}
 
       {loading ? (
-        <div className="text-center py-20 text-[#6E455E]">Loading Active Holds...</div>
+        <div className="text-center py-20 text-[#676C75]">Loading Active Holds...</div>
       ) : activeHolds.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl glass-panel border border-[#620F3C]/12 space-y-3 shadow-sm">
-          <p className="text-[#6E455E] text-sm">You currently have no active seat holds.</p>
+        <div className="p-12 text-center rounded-2xl glass-panel border border-[#EBE5DC] space-y-3 shadow-xs bg-white">
+          <p className="text-[#676C75] text-sm">You currently have no active seat holds.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {activeHolds.map((hold) => (
-            <div key={hold._id} className="p-5 rounded-2xl glass-panel border border-[#620F3C]/15 shadow-sm flex flex-col justify-between gap-4">
+            <div key={hold._id} className="p-5 rounded-2xl glass-panel border border-[#EBE5DC] shadow-xs bg-white flex flex-col justify-between gap-4">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="font-bold text-[#2A081C] text-base">{hold.event?.title || 'Event'}</span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#F5E0EC] text-[#620F3C] font-bold text-xs border border-[#620F3C]/20">
+                  <span className="font-bold text-[#1C2434] text-base">{hold.event?.title || 'Event'}</span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#FAF7F2] text-[#DE5D3B] font-bold text-xs border border-[#DE5D3B]/20">
                     {hold.tierName} x {hold.quantity} Seats
                   </span>
                 </div>
-                <div className="text-xs text-[#6E455E] space-y-1">
-                  <div>Price per seat: <span className="text-[#2A081C] font-bold">₹{hold.pricePerSeat}</span></div>
-                  <div>Total Amount: <span className="text-[#620F3C] font-black text-base">₹{hold.totalAmount}</span></div>
+                <div className="text-xs text-[#676C75] space-y-1">
+                  <div>Price per seat: <span className="text-[#1C2434] font-bold">₹{hold.pricePerSeat}</span></div>
+                  <div>Total Amount: <span className="text-[#DE5D3B] font-black text-base">₹{hold.totalAmount}</span></div>
                 </div>
               </div>
 
-              <div className="space-y-3 pt-3 border-t border-[#620F3C]/10">
+              <div className="space-y-3 pt-3 border-t border-[#EBE5DC]">
                 <HoldTimer expiresAt={hold.expiresAt} onExpire={fetchMyHolds} />
 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleInitiatePayment(hold)}
                     disabled={paying}
-                    className="flex-1 py-2.5 rounded-xl bg-[#620F3C] hover:bg-[#4E0B2F] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md"
+                    className="flex-1 py-2.5 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
                   >
                     <CreditCard className="w-4 h-4 text-white" />
                     {paying ? 'Opening Razorpay...' : `Pay ₹${hold.totalAmount}`}
                   </button>
                   <button
                     onClick={() => handleCancelHold(hold._id)}
-                    className="px-3.5 py-2.5 rounded-xl bg-white hover:bg-gray-50 text-[#6E455E] hover:text-red-700 border border-gray-200 text-xs font-semibold cursor-pointer"
+                    className="px-3.5 py-2.5 rounded-xl bg-white hover:bg-gray-50 text-[#676C75] hover:text-red-700 border border-gray-200 text-xs font-semibold cursor-pointer"
                   >
                     Release
                   </button>

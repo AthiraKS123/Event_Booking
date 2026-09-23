@@ -66,20 +66,20 @@ export default function LoginPage({ onLoginSuccess }) {
     <div className="max-w-md mx-auto py-10 space-y-6">
       <div className="text-center space-y-2">
         {isAdminRoute ? (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5E0EC] text-[#620F3C] border border-[#620F3C]/20 text-xs font-bold mb-2 shadow-sm">
-            <ShieldCheck className="w-4 h-4 text-[#620F3C]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF7F2] text-[#DE5D3B] border border-[#DE5D3B]/20 text-xs font-bold mb-2 shadow-xs">
+            <ShieldCheck className="w-4 h-4 text-[#DE5D3B]" />
             Admin Sign In Portal (/admin/login)
           </div>
         ) : (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5E0EC] text-[#620F3C] border border-[#620F3C]/20 text-xs font-bold mb-2 shadow-sm">
-            <User className="w-4 h-4 text-[#620F3C]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF7F2] text-[#DE5D3B] border border-[#DE5D3B]/20 text-xs font-bold mb-2 shadow-xs">
+            <User className="w-4 h-4 text-[#DE5D3B]" />
             User Sign In Portal (/login)
           </div>
         )}
-        <h1 className="text-3xl font-bold text-[#2A081C]">
+        <h1 className="text-3xl font-bold text-[#1C2434]">
           {isAdminRoute ? 'Admin Sign In' : 'Sign In to EventBook'}
         </h1>
-        <p className="text-[#6E455E] text-sm">Enter your credentials to access live event seat holding</p>
+        <p className="text-[#676C75] text-sm">Enter your credentials to access live event seat holding</p>
       </div>
 
       {errorMsg && (
@@ -89,27 +89,27 @@ export default function LoginPage({ onLoginSuccess }) {
         </div>
       )}
 
-      <div className="p-6 rounded-3xl bg-white border border-[#620F3C]/12 shadow-md space-y-6">
+      <div className="p-6 rounded-3xl bg-white border border-[#EBE5DC] shadow-sm space-y-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-[#2A081C] mb-1">Email Address</label>
+            <label className="block text-xs font-bold text-[#1C2434] mb-1">Email Address</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm focus:outline-none focus:border-[#620F3C]"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#EBE5DC] text-[#1C2434] text-sm focus:outline-none focus:border-[#DE5D3B]"
               placeholder="e.g. user@example.com"
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[#2A081C] mb-1">Password</label>
+            <label className="block text-xs font-bold text-[#1C2434] mb-1">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm focus:outline-none focus:border-[#620F3C]"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#EBE5DC] text-[#1C2434] text-sm focus:outline-none focus:border-[#DE5D3B]"
               placeholder="Enter your password"
               required
             />
@@ -118,7 +118,7 @@ export default function LoginPage({ onLoginSuccess }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-[#620F3C] hover:bg-[#4E0B2F] text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            className="w-full py-3 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
           >
             <Lock className="w-4 h-4 text-white" />
             {loading ? 'Signing in...' : 'Sign In'}
@@ -126,31 +126,31 @@ export default function LoginPage({ onLoginSuccess }) {
         </form>
 
         <div className="relative flex py-2 items-center">
-          <div className="flex-grow border-t border-[#620F3C]/10"></div>
-          <span className="flex-shrink mx-4 text-xs text-[#6E455E] font-semibold uppercase">Or 1-Click Quick Demo Login</span>
-          <div className="flex-grow border-t border-[#620F3C]/10"></div>
+          <div className="flex-grow border-t border-[#EBE5DC]"></div>
+          <span className="flex-shrink mx-4 text-xs text-[#676C75] font-semibold uppercase">Or 1-Click Quick Demo Login</span>
+          <div className="flex-grow border-t border-[#EBE5DC]"></div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => handleQuickLogin('user')}
-            className="py-2.5 rounded-xl bg-[#FAF6F9] hover:bg-[#F5E0EC] text-[#620F3C] border border-[#620F3C]/20 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-all"
+            className="py-2.5 rounded-xl bg-[#FAF7F2] hover:bg-[#FDF2EC] text-[#DE5D3B] border border-[#DE5D3B]/20 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-all"
           >
-            <User className="w-3.5 h-3.5 text-[#620F3C]" />
+            <User className="w-3.5 h-3.5 text-[#DE5D3B]" />
             User Demo
           </button>
           <button
             onClick={() => handleQuickLogin('admin')}
-            className="py-2.5 rounded-xl bg-[#FAF6F9] hover:bg-[#F5E0EC] text-[#620F3C] border border-[#620F3C]/20 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-all"
+            className="py-2.5 rounded-xl bg-[#FAF7F2] hover:bg-[#FDF2EC] text-[#DE5D3B] border border-[#DE5D3B]/20 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-all"
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-[#620F3C]" />
+            <ShieldCheck className="w-3.5 h-3.5 text-[#DE5D3B]" />
             Admin Demo
           </button>
         </div>
 
-        <div className="text-center text-xs text-[#6E455E] pt-2">
+        <div className="text-center text-xs text-[#676C75] pt-2">
           Don't have an account?{' '}
-          <Link to={isAdminRoute ? '/admin/register' : '/register'} className="text-[#620F3C] font-bold hover:underline">
+          <Link to={isAdminRoute ? '/admin/register' : '/register'} className="text-[#DE5D3B] font-bold hover:underline">
             Register here
           </Link>
         </div>

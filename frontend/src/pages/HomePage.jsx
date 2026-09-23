@@ -84,49 +84,89 @@ export default function HomePage() {
 
   return (
     <div className="space-y-8">
-      {/* Hero Banner with Integrated Search */}
-      <section className="relative overflow-hidden p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-[#620F3C] via-[#78144b] to-[#4A0A2C] border border-[#620F3C]/30 shadow-2xl text-white">
-        <div className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 text-white border border-white/25 text-xs font-bold tracking-wide backdrop-blur-sm">
-            <Sparkles className="w-3.5 h-3.5 text-white" />
-            Live High-Concurrency Ticketing Platform
-          </div>
+      {/* Hero Banner with Integrated Search & Concert Silhouette */}
+      <section className="relative overflow-hidden p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-[#FDEEE7] via-[#FCECE3] to-[#F7D8C8] border border-[#F5DACB] shadow-sm text-[#1C2434]">
+        {/* Concert Crowd Illustration on Right */}
+        <div className="hidden md:block absolute right-0 top-0 bottom-0 w-[42%] overflow-hidden pointer-events-none select-none">
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-[#F7D8C8]/20 to-[#FCECE3] z-10" />
+          <svg
+            className="w-full h-full object-cover opacity-80"
+            viewBox="0 0 500 360"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid slice"
+          >
+            <defs>
+              <linearGradient id="crowdGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#DE5D3B" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#7E2A15" stopOpacity="0.9" />
+              </linearGradient>
+            </defs>
+            {/* Stage spotlights */}
+            <path d="M 270 30 L 130 360 L 440 360 Z" fill="#FFE7DC" opacity="0.45" />
+            <path d="M 360 20 L 250 360 L 500 360 Z" fill="#FFDFC8" opacity="0.35" />
+            {/* Stage Truss Beam */}
+            <rect x="220" y="38" width="260" height="6" rx="3" fill="#A84C32" opacity="0.4" />
+            <circle cx="260" cy="45" r="4" fill="#FFE2D2" />
+            <circle cx="340" cy="45" r="4" fill="#FFE2D2" />
+            <circle cx="420" cy="45" r="4" fill="#FFE2D2" />
+            {/* Crowd Silhouettes */}
+            <path
+              d="M 60 360 C 70 330 85 320 100 325 C 110 305 125 295 135 305 C 145 285 155 260 165 270 C 175 285 185 310 195 320 C 205 295 215 280 230 295 C 240 270 255 240 268 255 C 280 270 290 300 300 310 C 315 280 330 265 345 285 C 360 250 375 235 390 255 C 405 275 415 305 425 315 C 440 280 460 270 475 295 C 485 270 495 285 500 305 L 500 360 L 60 360 Z"
+              fill="url(#crowdGrad)"
+            />
+            {/* Fore-crowd silhouettes */}
+            <path
+              d="M 120 360 C 150 310 180 300 210 325 C 240 280 270 270 300 310 C 340 260 380 280 420 320 C 450 290 480 300 500 340 L 500 360 L 120 360 Z"
+              fill="#5C1D0E"
+              opacity="0.8"
+            />
+            {/* Raised Hands */}
+            <path d="M 160 265 L 165 220 L 171 222 L 167 265 Z" fill="#8C351E" />
+            <path d="M 264 250 L 270 205 L 276 207 L 271 250 Z" fill="#7E2A15" />
+            <path d="M 386 250 L 392 200 L 398 203 L 393 250 Z" fill="#7E2A15" />
+          </svg>
+        </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Discover & Book Events with <span className="underline decoration-white/60 decoration-wavy decoration-2">Zero Double-Booking</span>
+        <div className="relative z-10 max-w-2xl space-y-4">
+          <h1 className="text-3xl sm:text-5xl font-black text-[#1C2434] tracking-tight leading-tight">
+            Discover & Book Events with Zero{' '}
+            <span className="text-[#DE5D3B] underline decoration-[#DE5D3B]/40 decoration-wavy decoration-2">
+              Double-Booking
+            </span>
           </h1>
 
-          <p className="text-white/85 text-sm sm:text-base leading-relaxed">
+          <p className="text-[#676C75] text-sm sm:text-base leading-relaxed">
             Instant 10-minute atomic database seat holds, verified Razorpay checkout, and digital QR passes with real-time gate check-in.
           </p>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="pt-2 flex items-center gap-2.5">
-            <div className="relative flex-1">
-              <Search className="w-5 h-5 text-white/70 absolute left-4 top-3.5" />
+          {/* Search Bar Container */}
+          <form onSubmit={handleSearchSubmit} className="pt-2 flex items-center max-w-xl">
+            <div className="relative w-full flex items-center bg-white rounded-full p-1.5 pl-5 shadow-xs border border-[#EBE5DC] focus-within:border-[#DE5D3B] transition-all">
+              <Search className="w-5 h-5 text-[#9CA3AF] shrink-0 mr-3" />
               <input
                 type="text"
                 placeholder="Search by event title, artist, or venue..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-12 pr-10 py-3.5 rounded-2xl bg-white/15 border-2 border-white/30 text-white placeholder:text-white/60 focus:outline-none focus:bg-white focus:text-[#2A081C] focus:placeholder:text-gray-400 focus:border-white shadow-inner transition-all"
+                className="w-full bg-transparent text-[#1C2434] placeholder:text-[#9CA3AF] text-sm font-medium focus:outline-none"
               />
               {search && (
                 <button
                   type="button"
                   onClick={handleClearSearch}
-                  className="absolute right-3.5 top-3.5 text-white/70 hover:text-white p-0.5 cursor-pointer"
+                  className="text-[#9CA3AF] hover:text-[#1C2434] p-1 cursor-pointer mr-1"
                 >
                   <X className="w-4 h-4" />
                 </button>
               )}
+              <button
+                type="submit"
+                className="px-7 py-2.5 rounded-full bg-[#DE5D3B] hover:bg-[#C84E2E] text-white text-sm font-bold cursor-pointer transition-all shadow-xs shrink-0"
+              >
+                Search
+              </button>
             </div>
-            <button
-              type="submit"
-              className="px-6 py-3.5 rounded-2xl bg-[#F5E0EC] hover:bg-white text-[#620F3C] text-sm font-extrabold cursor-pointer transition-all shadow-lg transform hover:scale-[1.02]"
-            >
-              Search
-            </button>
           </form>
         </div>
       </section>
@@ -141,13 +181,13 @@ export default function HomePage() {
               <button
                 key={cat.name}
                 onClick={() => setCategory(cat.name)}
-                className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 border ${
+                className={`px-5 py-2.5 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 border ${
                   isSelected
-                    ? 'bg-[#620F3C] text-white border-[#620F3C] shadow-md transform scale-[1.03]'
-                    : 'bg-white text-[#2A081C]/80 hover:text-[#620F3C] border-[#620F3C]/15 hover:border-[#620F3C]/40 shadow-sm'
+                    ? 'bg-[#DE5D3B] text-white border-[#DE5D3B] shadow-xs transform scale-[1.02]'
+                    : 'bg-white text-[#1C2434] hover:text-[#DE5D3B] border-[#EBE5DC] hover:border-[#DE5D3B]/40 hover:bg-[#FDF9F6] shadow-xs'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-[#620F3C]'}`} />
+                <Icon className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-[#DE5D3B]'}`} />
                 <span>{cat.name}</span>
               </button>
             );
@@ -156,35 +196,35 @@ export default function HomePage() {
       </div>
 
       {/* Discovery Toolbar: Sort & Timeframe Filter */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-white border border-[#620F3C]/15 shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3 rounded-2xl bg-white border border-[#EBE5DC] shadow-xs">
         {/* Left: Timeframe Quick Filters */}
-        <div className="flex items-center gap-1.5 bg-[#FAF6F9] p-1 rounded-xl border border-[#620F3C]/10">
+        <div className="flex items-center gap-1 bg-[#FAF7F2] p-1 rounded-full border border-[#EBE5DC]/70">
           <button
             onClick={() => setTimeframe('all')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
               timeframe === 'all'
-                ? 'bg-[#620F3C] text-white shadow-sm'
-                : 'text-[#6E455E] hover:text-[#620F3C]'
+                ? 'bg-[#DE5D3B] text-white shadow-xs'
+                : 'text-[#676C75] hover:text-[#1C2434]'
             }`}
           >
             All Dates
           </button>
           <button
             onClick={() => setTimeframe('weekend')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
               timeframe === 'weekend'
-                ? 'bg-[#620F3C] text-white shadow-sm'
-                : 'text-[#6E455E] hover:text-[#620F3C]'
+                ? 'bg-[#DE5D3B] text-white shadow-xs'
+                : 'text-[#676C75] hover:text-[#1C2434]'
             }`}
           >
             This Weekend
           </button>
           <button
             onClick={() => setTimeframe('month')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
               timeframe === 'month'
-                ? 'bg-[#620F3C] text-white shadow-sm'
-                : 'text-[#6E455E] hover:text-[#620F3C]'
+                ? 'bg-[#DE5D3B] text-white shadow-xs'
+                : 'text-[#676C75] hover:text-[#1C2434]'
             }`}
           >
             Next 30 Days
@@ -193,27 +233,27 @@ export default function HomePage() {
 
         {/* Right: Results Count & Sort Dropdown */}
         <div className="flex items-center justify-between sm:justify-end gap-3">
-          <span className="text-xs text-[#6E455E] font-medium">
-            Showing <strong className="text-[#2A081C]">{events.length}</strong> event{events.length !== 1 ? 's' : ''}
+          <span className="text-xs text-[#676C75] font-medium">
+            Showing <strong className="text-[#DE5D3B]">{events.length}</strong> event{events.length !== 1 ? 's' : ''}
           </span>
 
-          <div className="flex items-center gap-1.5 bg-[#FAF6F9] border border-[#620F3C]/20 rounded-xl px-3 py-1.5 text-xs text-[#2A081C]">
-            <ArrowUpDown className="w-3.5 h-3.5 text-[#620F3C]" />
+          <div className="flex items-center gap-1.5 bg-[#FAF7F2] border border-[#EBE5DC] rounded-full px-3.5 py-1.5 text-xs text-[#1C2434]">
+            <ArrowUpDown className="w-3.5 h-3.5 text-[#DE5D3B]" />
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="bg-transparent text-[#2A081C] text-xs font-bold focus:outline-none cursor-pointer"
+              className="bg-transparent text-[#1C2434] text-xs font-bold focus:outline-none cursor-pointer"
             >
-              <option value="date_asc" className="bg-white text-[#2A081C]">
+              <option value="date_asc" className="bg-white text-[#1C2434]">
                 📅 Date: Soonest First
               </option>
-              <option value="date_desc" className="bg-white text-[#2A081C]">
+              <option value="date_desc" className="bg-white text-[#1C2434]">
                 📅 Date: Furthest First
               </option>
-              <option value="price_asc" className="bg-white text-[#2A081C]">
+              <option value="price_asc" className="bg-white text-[#1C2434]">
                 💰 Price: Low to High
               </option>
-              <option value="price_desc" className="bg-white text-[#2A081C]">
+              <option value="price_desc" className="bg-white text-[#1C2434]">
                 💎 Price: High to Low
               </option>
             </select>
@@ -225,24 +265,24 @@ export default function HomePage() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="h-96 rounded-2xl bg-white/70 border border-[#620F3C]/10 animate-pulse"></div>
+            <div key={n} className="h-96 rounded-2xl bg-white/70 border border-[#EBE5DC] animate-pulse"></div>
           ))}
         </div>
       ) : events.length === 0 ? (
         /* Empty State */
-        <div className="p-12 text-center rounded-3xl bg-white border border-[#620F3C]/15 shadow-sm space-y-4 max-w-lg mx-auto">
-          <div className="w-16 h-16 rounded-2xl bg-[#FAF6F9] border border-[#620F3C]/20 flex items-center justify-center mx-auto text-[#620F3C]">
+        <div className="p-12 text-center rounded-3xl bg-white border border-[#EBE5DC] shadow-xs space-y-4 max-w-lg mx-auto">
+          <div className="w-16 h-16 rounded-2xl bg-[#FAF7F2] border border-[#EBE5DC] flex items-center justify-center mx-auto text-[#DE5D3B]">
             <Search className="w-8 h-8" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-lg font-bold text-[#2A081C]">No matching events found</h3>
-            <p className="text-xs text-[#6E455E]">
+            <h3 className="text-lg font-bold text-[#1C2434]">No matching events found</h3>
+            <p className="text-xs text-[#676C75]">
               We couldn't find any events matching your current search or filter criteria.
             </p>
           </div>
           <button
             onClick={handleResetFilters}
-            className="px-5 py-2.5 rounded-xl bg-[#620F3C] hover:bg-[#4E0B2F] text-white text-xs font-bold cursor-pointer transition-colors shadow-sm"
+            className="px-5 py-2.5 rounded-full bg-[#DE5D3B] hover:bg-[#C84E2E] text-white text-xs font-bold cursor-pointer transition-colors shadow-xs"
           >
             Clear All Filters
           </button>
@@ -265,7 +305,7 @@ export default function HomePage() {
             return (
               <div
                 key={event._id}
-                className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between border border-[#620F3C]/12 hover:border-[#620F3C]/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                className="glass-card rounded-3xl overflow-hidden flex flex-col justify-between border border-[#EBE5DC] hover:border-[#DE5D3B]/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 bg-white"
               >
                 <div>
                   {/* Banner Image with Badges */}
@@ -278,40 +318,40 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"></div>
 
                     {/* Category Badge */}
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/95 text-xs font-bold text-[#620F3C] border border-[#620F3C]/20 backdrop-blur-md shadow-sm">
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/95 text-xs font-bold text-[#DE5D3B] border border-[#DE5D3B]/20 backdrop-blur-md shadow-xs">
                       {event.category || 'General'}
                     </div>
 
                     {/* Selling Fast / Sold Out Badge */}
                     {isSoldOut ? (
-                      <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-red-600 text-xs font-bold text-white shadow-sm">
+                      <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-red-600 text-xs font-bold text-white shadow-xs">
                         Sold Out
                       </div>
                     ) : isSellingFast ? (
-                      <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-amber-500 text-xs font-bold text-white shadow-sm flex items-center gap-1">
+                      <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-amber-500 text-xs font-bold text-white shadow-xs flex items-center gap-1">
                         <Flame className="w-3.5 h-3.5 text-white" />
                         Selling Fast
                       </div>
                     ) : null}
 
                     {/* Price Starting From Tag */}
-                    <div className="absolute bottom-3 right-3 px-3 py-1 rounded-xl bg-white/95 text-xs font-bold text-[#2A081C] border border-white/60 shadow-sm">
-                      From <span className="text-sm font-extrabold text-[#620F3C]">₹{minPrice}</span>
+                    <div className="absolute bottom-3 right-3 px-3 py-1 rounded-xl bg-white/95 text-xs font-bold text-[#1C2434] border border-white/60 shadow-xs">
+                      From <span className="text-sm font-extrabold text-[#DE5D3B]">₹{minPrice}</span>
                     </div>
                   </div>
 
                   <div className="p-6 space-y-4">
                     <div>
-                      <h3 className="text-lg font-bold text-[#2A081C] line-clamp-1 mb-2 hover:text-[#620F3C] transition-colors">
+                      <h3 className="text-lg font-bold text-[#1C2434] line-clamp-1 mb-2 hover:text-[#DE5D3B] transition-colors">
                         {event.title}
                       </h3>
-                      <div className="space-y-1.5 text-xs text-[#6E455E]">
+                      <div className="space-y-1.5 text-xs text-[#676C75]">
                         <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-[#620F3C] shrink-0" />
+                          <MapPin className="w-4 h-4 text-[#DE5D3B] shrink-0" />
                           <span className="line-clamp-1 font-medium">{event.venue}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-[#620F3C] shrink-0" />
+                          <Calendar className="w-4 h-4 text-[#DE5D3B] shrink-0" />
                           <span className="font-medium">
                             {new Date(event.dateTime).toLocaleDateString(undefined, {
                               weekday: 'short',
@@ -329,8 +369,8 @@ export default function HomePage() {
                     </div>
 
                     {/* Ticket Tiers Preview */}
-                    <div className="space-y-2 pt-2 border-t border-[#620F3C]/10">
-                      <div className="flex justify-between text-[10px] font-bold text-[#6E455E] uppercase tracking-wider">
+                    <div className="space-y-2 pt-2 border-t border-[#EBE5DC]">
+                      <div className="flex justify-between text-[10px] font-bold text-[#676C75] uppercase tracking-wider">
                         <span>Ticket Classes</span>
                         <span>{totalAvailable} seats left</span>
                       </div>
@@ -338,12 +378,12 @@ export default function HomePage() {
                         {event.ticketTiers?.slice(0, 2).map((tier) => (
                           <div
                             key={tier._id}
-                            className="flex items-center justify-between text-xs p-2 rounded-xl bg-[#FAF6F9] border border-[#620F3C]/10"
+                            className="flex items-center justify-between text-xs p-2 rounded-xl bg-[#FAF7F2] border border-[#EBE5DC]"
                           >
-                            <span className="font-bold text-[#2A081C]">{tier.name}</span>
+                            <span className="font-bold text-[#1C2434]">{tier.name}</span>
                             <div className="flex items-center gap-2">
-                              <span className="text-[#620F3C] font-black">₹{tier.price}</span>
-                              <span className="text-[#6E455E] text-[11px]">({tier.availableSeats} left)</span>
+                              <span className="text-[#DE5D3B] font-black">₹{tier.price}</span>
+                              <span className="text-[#676C75] text-[11px]">({tier.availableSeats} left)</span>
                             </div>
                           </div>
                         ))}
@@ -355,10 +395,10 @@ export default function HomePage() {
                 <div className="p-6 pt-0">
                   <Link
                     to={`/events/${event._id}`}
-                    className={`w-full py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm ${
+                    className={`w-full py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs ${
                       isSoldOut
                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-[#620F3C] hover:bg-[#4E0B2F] text-white transform hover:scale-[1.01]'
+                        : 'bg-[#DE5D3B] hover:bg-[#C84E2E] text-white transform hover:scale-[1.01]'
                     }`}
                   >
                     <Ticket className="w-4 h-4" />

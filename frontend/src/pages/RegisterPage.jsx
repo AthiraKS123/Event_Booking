@@ -41,20 +41,20 @@ export default function RegisterPage({ onLoginSuccess }) {
     <div className="max-w-md mx-auto py-10 space-y-6">
       <div className="text-center space-y-2">
         {isAdminRoute ? (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5E0EC] text-[#620F3C] border border-[#620F3C]/20 text-xs font-bold mb-2 shadow-sm">
-            <ShieldCheck className="w-4 h-4 text-[#620F3C]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF7F2] text-[#DE5D3B] border border-[#DE5D3B]/20 text-xs font-bold mb-2 shadow-xs">
+            <ShieldCheck className="w-4 h-4 text-[#DE5D3B]" />
             Admin Registration Portal (/admin/register)
           </div>
         ) : (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5E0EC] text-[#620F3C] border border-[#620F3C]/20 text-xs font-bold mb-2 shadow-sm">
-            <User className="w-4 h-4 text-[#620F3C]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF7F2] text-[#DE5D3B] border border-[#DE5D3B]/20 text-xs font-bold mb-2 shadow-xs">
+            <User className="w-4 h-4 text-[#DE5D3B]" />
             User Registration Portal (/register)
           </div>
         )}
-        <h1 className="text-3xl font-bold text-[#2A081C]">
+        <h1 className="text-3xl font-bold text-[#1C2434]">
           {isAdminRoute ? 'Register as Admin' : 'Create an Account'}
         </h1>
-        <p className="text-[#6E455E] text-sm">
+        <p className="text-[#676C75] text-sm">
           {isAdminRoute ? 'Set up an organizer account to publish and manage events' : 'Join EventBook to reserve seats & hold tickets'}
         </p>
       </div>
@@ -66,39 +66,39 @@ export default function RegisterPage({ onLoginSuccess }) {
         </div>
       )}
 
-      <div className="p-6 rounded-3xl bg-white border border-[#620F3C]/12 shadow-md space-y-6">
+      <div className="p-6 rounded-3xl bg-white border border-[#EBE5DC] shadow-sm space-y-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-[#2A081C] mb-1">Full Name</label>
+            <label className="block text-xs font-bold text-[#1C2434] mb-1">Full Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm focus:outline-none focus:border-[#620F3C]"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#EBE5DC] text-[#1C2434] text-sm focus:outline-none focus:border-[#DE5D3B]"
               placeholder="e.g. Arya Dev"
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[#2A081C] mb-1">Email Address</label>
+            <label className="block text-xs font-bold text-[#1C2434] mb-1">Email Address</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm focus:outline-none focus:border-[#620F3C]"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#EBE5DC] text-[#1C2434] text-sm focus:outline-none focus:border-[#DE5D3B]"
               placeholder="e.g. user@example.com"
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[#2A081C] mb-1">Password</label>
+            <label className="block text-xs font-bold text-[#1C2434] mb-1">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm focus:outline-none focus:border-[#620F3C]"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#EBE5DC] text-[#1C2434] text-sm focus:outline-none focus:border-[#DE5D3B]"
               placeholder="At least 6 characters"
               minLength="6"
               required
@@ -106,11 +106,11 @@ export default function RegisterPage({ onLoginSuccess }) {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[#2A081C] mb-1">Account Role</label>
+            <label className="block text-xs font-bold text-[#1C2434] mb-1">Account Role</label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#620F3C]/25 text-[#2A081C] text-sm font-semibold focus:outline-none focus:border-[#620F3C]"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#EBE5DC] text-[#1C2434] text-sm font-semibold focus:outline-none focus:border-[#DE5D3B]"
             >
               <option value="user">User (Browse & Hold Event Seats)</option>
               <option value="admin">Admin (Create & Manage Concerts)</option>
@@ -120,16 +120,16 @@ export default function RegisterPage({ onLoginSuccess }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-[#620F3C] hover:bg-[#4E0B2F] text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            className="w-full py-3 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] text-white font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
           >
             <User className="w-4 h-4 text-white" />
             {loading ? 'Creating Account...' : 'Register Account'}
           </button>
         </form>
 
-        <div className="text-center text-xs text-[#6E455E] pt-2">
+        <div className="text-center text-xs text-[#676C75] pt-2">
           Already have an account?{' '}
-          <Link to={isAdminRoute ? '/admin/login' : '/login'} className="text-[#620F3C] font-bold hover:underline">
+          <Link to={isAdminRoute ? '/admin/login' : '/login'} className="text-[#DE5D3B] font-bold hover:underline">
             Sign In here
           </Link>
         </div>

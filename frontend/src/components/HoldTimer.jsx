@@ -36,9 +36,9 @@ const HoldTimer = ({ expiresAt, onExpire }) => {
     <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors shadow-sm ${
       isUrgent
         ? 'bg-amber-100 text-amber-900 border border-amber-400 animate-pulse'
-        : 'bg-[#FAF6F9] text-[#620F3C] border border-[#620F3C]/20'
+        : 'bg-[#FAF7F2] text-[#DE5D3B] border border-[#DE5D3B]/20'
     }`}>
-      {isUrgent ? <AlertTriangle className="w-4 h-4 text-amber-700" /> : <Clock className="w-4 h-4 text-[#620F3C]" />}
+      {isUrgent ? <AlertTriangle className="w-4 h-4 text-amber-700" /> : <Clock className="w-4 h-4 text-[#DE5D3B]" />}
       <span>Hold Expires in: <span className="font-mono text-base ml-1 font-black tracking-wider">{formattedTime}</span></span>
     </div>
   );

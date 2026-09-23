@@ -86,9 +86,9 @@ const QrScannerModal = ({ isOpen, onClose, onScanSuccess }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-      <div className="w-full max-w-lg bg-white border border-[#620F3C]/20 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      <div className="w-full max-w-lg bg-white border border-[#EBE5DC] rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-[#620F3C]/20 bg-[#620F3C] text-white">
+        <div className="flex items-center justify-between p-5 border-b border-[#DE5D3B]/20 bg-[#DE5D3B] text-white">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center border border-white/20">
               <Camera className="w-5 h-5 text-white" />
@@ -107,7 +107,7 @@ const QrScannerModal = ({ isOpen, onClose, onScanSuccess }) => {
               cleanupScanner();
               onClose();
             }}
-            className="w-8 h-8 rounded-full bg-[#4E0B2F] hover:bg-[#35051C] flex items-center justify-center text-white transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full bg-[#C84E2E] hover:bg-[#B33F21] flex items-center justify-center text-white transition-all cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -120,21 +120,21 @@ const QrScannerModal = ({ isOpen, onClose, onScanSuccess }) => {
             <div id="qr-reader-widget" className="w-full"></div>
           </div>
 
-          <div className="text-center text-xs text-[#6E455E] space-y-1">
+          <div className="text-center text-xs text-[#676C75] space-y-1">
             <p>💡 <strong>Tip:</strong> You can scan using your <strong>Live Camera</strong> or click <strong>"Scan an Image File"</strong> inside the scanner widget.</p>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-[#620F3C]/10 bg-[#FAF6F9] flex items-center justify-between">
-          <span className="text-[11px] text-[#6E455E]">Cryptographic Gatekeeper Engine • 2026</span>
+        <div className="p-4 border-t border-[#EBE5DC] bg-[#FAF7F2] flex items-center justify-between">
+          <span className="text-[11px] text-[#676C75]">Cryptographic Gatekeeper Engine • 2026</span>
           <button
             type="button"
             onClick={() => {
               cleanupScanner();
               onClose();
             }}
-            className="px-4 py-2 rounded-xl bg-[#620F3C] hover:bg-[#4E0B2F] text-white font-bold text-xs shadow-sm cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] text-white font-bold text-xs shadow-xs cursor-pointer"
           >
             Close Scanner
           </button>

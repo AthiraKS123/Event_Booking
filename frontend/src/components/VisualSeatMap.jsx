@@ -126,20 +126,20 @@ const VisualSeatMap = ({ tier, onSelectionChange }) => {
   };
 
   return (
-    <div className="p-6 rounded-2xl bg-white border border-[#620F3C]/15 shadow-sm space-y-6">
+    <div className="p-6 rounded-2xl bg-white border border-[#EBE5DC] shadow-xs space-y-6">
       {/* Header & Quick Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#620F3C]/10 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EBE5DC] pb-4">
         <div>
-          <h4 className="text-sm font-bold text-[#2A081C] flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-[#620F3C]" />
+          <h4 className="text-sm font-bold text-[#1C2434] flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-[#DE5D3B]" />
             Visual Seat Map: {tier?.name || 'General'} Tier
           </h4>
-          <p className="text-xs text-[#6E455E]">
+          <p className="text-xs text-[#676C75]">
             {availableSeats === 0 ? (
               <span className="text-red-600 font-bold">This tier is currently sold out.</span>
             ) : (
               <span>
-                Capacity: <strong className="text-[#620F3C]">{availableSeats} of {totalSeats} seats available</strong>
+                Capacity: <strong className="text-[#DE5D3B]">{availableSeats} of {totalSeats} seats available</strong>
               </span>
             )}
           </p>
@@ -150,7 +150,7 @@ const VisualSeatMap = ({ tier, onSelectionChange }) => {
             <button
               type="button"
               onClick={() => handleSelectBest(2)}
-              className="px-3 py-1.5 rounded-lg bg-[#F5E0EC] hover:bg-[#edd1e3] text-[11px] font-bold text-[#620F3C] border border-[#620F3C]/20 transition-all cursor-pointer shadow-sm"
+              className="px-3 py-1.5 rounded-lg bg-[#FAF7F2] hover:bg-[#FDF2EC] text-[11px] font-bold text-[#DE5D3B] border border-[#DE5D3B]/20 transition-all cursor-pointer shadow-xs"
             >
               ⚡ Auto-Pick Best 2
             </button>
@@ -177,8 +177,8 @@ const VisualSeatMap = ({ tier, onSelectionChange }) => {
 
       {/* Curved Stage Header */}
       <div className="space-y-2 text-center max-w-md mx-auto">
-        <div className="h-3 w-full rounded-t-full bg-gradient-to-r from-transparent via-[#620F3C] to-transparent opacity-80 shadow-[0_0_15px_rgba(98,15,60,0.2)]"></div>
-        <span className="text-[10px] uppercase font-extrabold tracking-widest text-[#620F3C] bg-[#FAF6F9] px-4 py-1 rounded-full border border-[#620F3C]/20">
+        <div className="h-3 w-full rounded-t-full bg-gradient-to-r from-transparent via-[#DE5D3B] to-transparent opacity-80 shadow-[0_0_15px_rgba(222,93,59,0.2)]"></div>
+        <span className="text-[10px] uppercase font-extrabold tracking-widest text-[#DE5D3B] bg-[#FAF7F2] px-4 py-1 rounded-full border border-[#DE5D3B]/20">
           🎭 STAGE / SCREEN AREA
         </span>
       </div>
@@ -194,7 +194,7 @@ const VisualSeatMap = ({ tier, onSelectionChange }) => {
             return (
               <div key={row} className="flex items-center justify-center gap-2">
                 {/* Row Label (Left) */}
-                <span className="w-5 text-center text-xs font-bold text-[#6E455E]">{row}</span>
+                <span className="w-5 text-center text-xs font-bold text-[#676C75]">{row}</span>
 
                 {/* Left Aisle Seats */}
                 <div className="flex gap-1.5">
@@ -214,8 +214,8 @@ const VisualSeatMap = ({ tier, onSelectionChange }) => {
                           isOccupied
                             ? 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
                             : isSelected
-                            ? 'bg-[#620F3C] text-white border-2 border-[#620F3C] shadow-md scale-110 font-extrabold'
-                            : 'bg-[#FAF6F9] text-[#2A081C] border border-[#620F3C]/25 hover:border-[#620F3C] hover:bg-[#F5E0EC]/40 hover:scale-105'
+                            ? 'bg-[#DE5D3B] text-white border-2 border-[#DE5D3B] shadow-md scale-110 font-extrabold'
+                            : 'bg-[#FAF7F2] text-[#1C2434] border border-[#DE5D3B]/25 hover:border-[#DE5D3B] hover:bg-[#FDF2EC] hover:scale-105'
                         }`}
                       >
                         {isOccupied ? (
@@ -232,7 +232,7 @@ const VisualSeatMap = ({ tier, onSelectionChange }) => {
 
                 {/* Center Aisle */}
                 {rightSeats.length > 0 && (
-                  <div className="w-4 text-center text-[9px] text-[#620F3C]/30 font-mono">|</div>
+                  <div className="w-4 text-center text-[9px] text-[#DE5D3B]/30 font-mono">|</div>
                 )}
 
                 {/* Right Aisle Seats */}
@@ -253,8 +253,8 @@ const VisualSeatMap = ({ tier, onSelectionChange }) => {
                           isOccupied
                             ? 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
                             : isSelected
-                            ? 'bg-[#620F3C] text-white border-2 border-[#620F3C] shadow-md scale-110 font-extrabold'
-                            : 'bg-[#FAF6F9] text-[#2A081C] border border-[#620F3C]/25 hover:border-[#620F3C] hover:bg-[#F5E0EC]/40 hover:scale-105'
+                            ? 'bg-[#DE5D3B] text-white border-2 border-[#DE5D3B] shadow-md scale-110 font-extrabold'
+                            : 'bg-[#FAF7F2] text-[#1C2434] border border-[#DE5D3B]/25 hover:border-[#DE5D3B] hover:bg-[#FDF2EC] hover:scale-105'
                         }`}
                       >
                         {isOccupied ? (
@@ -270,7 +270,7 @@ const VisualSeatMap = ({ tier, onSelectionChange }) => {
                 </div>
 
                 {/* Row Label (Right) */}
-                <span className="w-5 text-center text-xs font-bold text-[#6E455E]">{row}</span>
+                <span className="w-5 text-center text-xs font-bold text-[#676C75]">{row}</span>
               </div>
             );
           })}
@@ -278,14 +278,14 @@ const VisualSeatMap = ({ tier, onSelectionChange }) => {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-center gap-6 pt-2 border-t border-[#620F3C]/10 text-xs text-[#6E455E]">
+      <div className="flex items-center justify-center gap-6 pt-2 border-t border-[#EBE5DC] text-xs text-[#676C75]">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-[#FAF6F9] border border-[#620F3C]/30"></div>
+          <div className="w-4 h-4 rounded bg-[#FAF7F2] border border-[#DE5D3B]/30"></div>
           <span>Available</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-[#620F3C] border border-[#620F3C] shadow-sm"></div>
-          <span className="font-bold text-[#620F3C]">Selected</span>
+          <div className="w-4 h-4 rounded bg-[#DE5D3B] border border-[#DE5D3B] shadow-xs"></div>
+          <span className="font-bold text-[#DE5D3B]">Selected</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-gray-100 border border-gray-200 opacity-60"></div>
@@ -295,18 +295,18 @@ const VisualSeatMap = ({ tier, onSelectionChange }) => {
 
       {/* Selection Summary Pill */}
       {selectedSeats.length > 0 && (
-        <div className="p-3.5 rounded-xl bg-[#FAF6F9] border border-[#620F3C]/25 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs shadow-sm animate-scaleUp">
+        <div className="p-3.5 rounded-xl bg-[#FAF7F2] border border-[#DE5D3B]/25 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs shadow-xs animate-scaleUp">
           <div className="flex items-center gap-2">
-            <span className="text-[#6E455E]">Selected Seats:</span>
+            <span className="text-[#676C75]">Selected Seats:</span>
             <div className="flex flex-wrap gap-1">
               {selectedSeats.map((s) => (
-                <span key={s} className="px-2 py-0.5 rounded-md bg-[#620F3C] text-white font-extrabold text-[11px] shadow-sm">
+                <span key={s} className="px-2 py-0.5 rounded-md bg-[#DE5D3B] text-white font-extrabold text-[11px] shadow-xs">
                   {s}
                 </span>
               ))}
             </div>
           </div>
-          <div className="font-extrabold text-[#620F3C]">
+          <div className="font-extrabold text-[#DE5D3B]">
             {selectedSeats.length} Seat{selectedSeats.length > 1 ? 's' : ''} = ₹{selectedSeats.length * (tier?.price || 0)}
           </div>
         </div>

@@ -2,35 +2,35 @@
 
 @layer base {
   body {
-    background-color: #FAF6F9;
-    background: #FAF6F9;
-    color: #2A081C;
+    background-color: #FAF7F2;
+    background: #FAF7F2;
+    color: #1C2434;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     min-height: 100vh;
   }
 }
 
-/* Luxury 2-Color Light Theme: Soft Rose Cream (#FAF6F9) & Deep Mulberry Plum (#620F3C) */
+/* Warm Terracotta Coral Theme: Sand/Cream (#FAF7F2), Terracotta Coral (#DE5D3B), Dark Slate (#1C2434) */
 .glass-panel {
   background: #FFFFFF;
-  border: 1px solid rgba(98, 15, 60, 0.12);
-  box-shadow: 0 8px 30px rgba(98, 15, 60, 0.05);
+  border: 1px solid rgba(222, 93, 59, 0.12);
+  box-shadow: 0 8px 30px rgba(222, 93, 59, 0.04);
 }
 
 .glass-card {
   background: #FFFFFF;
-  border: 1px solid rgba(98, 15, 60, 0.1);
-  box-shadow: 0 4px 18px rgba(98, 15, 60, 0.04);
+  border: 1px solid rgba(222, 93, 59, 0.1);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
   transition: all 0.25s ease-in-out;
 }
 
 .glass-card:hover {
-  border-color: rgba(98, 15, 60, 0.35);
-  box-shadow: 0 12px 30px rgba(98, 15, 60, 0.1);
+  border-color: rgba(222, 93, 59, 0.35);
+  box-shadow: 0 12px 30px rgba(222, 93, 59, 0.08);
 }
 
 .gradient-text {
-  color: #620F3C;
+  color: #DE5D3B;
   background: none;
   -webkit-text-fill-color: initial;
 }
@@ -46,9 +46,9 @@
 }
 
 #qr-reader-widget button {
-  background-color: #620F3C !important;
+  background-color: #DE5D3B !important;
   color: #FFFFFF !important;
-  border: 1px solid rgba(98, 15, 60, 0.4) !important;
+  border: 1px solid rgba(222, 93, 59, 0.4) !important;
   padding: 8px 16px !important;
   border-radius: 10px !important;
   font-weight: 700 !important;
@@ -59,14 +59,14 @@
 }
 
 #qr-reader-widget button:hover {
-  background-color: #4E0B2F !important;
-  border-color: #620F3C !important;
+  background-color: #C84E2E !important;
+  border-color: #DE5D3B !important;
 }
 
 #qr-reader-widget select {
   background-color: #FFFFFF !important;
-  color: #2A081C !important;
-  border: 1px solid rgba(98, 15, 60, 0.3) !important;
+  color: #1C2434 !important;
+  border: 1px solid rgba(222, 93, 59, 0.3) !important;
   padding: 6px 12px !important;
   border-radius: 8px !important;
   font-size: 12px !important;
@@ -80,13 +80,13 @@
 }
 
 #qr-reader-widget a {
-  color: #620F3C !important;
+  color: #DE5D3B !important;
   text-decoration: underline !important;
   font-size: 12px !important;
 }
 
 #qr-reader-widget__status_span {
   background-color: transparent !important;
-  color: #620F3C !important;
+  color: #DE5D3B !important;
   font-size: 11px !important;
 }
