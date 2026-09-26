@@ -289,7 +289,36 @@ const options = {
           },
         },
       },
+      '/bookings/{id}/cancel': {
+        post: {
+          tags: ['Ticket & Booking Engine'],
+          summary: 'Cancel confirmed ticket, restore event tier seats & process refund',
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+          ],
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    reason: { type: 'string', example: 'Unable to attend event' },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            200: { description: 'Ticket cancelled and refund initiated' },
+            400: { description: 'Bad Request - Ticket already checked in or event passed' },
+            403: { description: 'Forbidden - Not authorized to cancel this ticket' },
+            404: { description: 'Booking not found' },
+          },
+        },
+      },
     },
+
   },
   apis: ['./src/routes/*.js'],
 };

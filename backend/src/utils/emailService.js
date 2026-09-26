@@ -179,4 +179,138 @@ const sendTicketEmail = async (booking) => {
   }
 };
 
-module.exports = { sendTicketEmail };
+/**
+ * Send Ticket Cancellation & Refund Confirmation Email to User
+ * @param {Object} booking - Mongoose Booking document populated with event and user
+ * @returns {Promise<Object>} Delivery info
+ */
+const sendCancellationEmail = async (booking) => {
+  try {
+    if (!booking || !booking.user || !booking.user.email) {
+      console.warn('⚠️ Cannot send cancellation email: Missing recipient user or email.');
+      return { success: false, reason: 'Missing recipient email' };
+    }
+
+    const mailTransporter = await getTransporter();
+
+    const eventTitle = booking.event ? booking.event.title : 'Event Booking';
+    const recipientEmail = booking.user.email;
+    const recipientName = booking.user.name || 'Valued Attendee';
+    const refundAmount = booking.refundAmount || booking.totalAmount || 0;
+    const refundId = booking.refundId || 'N/A';
+    const reason = booking.cancellationReason || 'Requested by attendee';
+
+    const htmlTemplate = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #FAF7F2; color: #1C2434; margin: 0; padding: 20px; }
+          .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #EBE5DC; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+          .header { background: #1C2434; padding: 32px 24px; text-align: center; }
+          .header h1 { color: #ffffff; font-size: 24px; margin: 0 0 8px 0; font-weight: 700; }
+          .header p { color: #A1A7B1; font-size: 14px; margin: 0; }
+          .body { padding: 32px 24px; }
+          .alert-box { background: #FEF3F2; border: 1px solid #FECDCA; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+          .alert-box h3 { color: #B42318; margin: 0 0 4px 0; font-size: 15px; font-weight: 700; }
+          .alert-box p { color: #912018; margin: 0; font-size: 13px; line-height: 1.5; }
+          .grid { width: 100%; border-collapse: collapse; margin: 20px 0; }
+          .grid td { padding: 12px 0; border-bottom: 1px solid #F0ECE4; font-size: 14px; }
+          .label { color: #676C75; font-weight: 500; width: 40%; }
+          .val { color: #1C2434; font-weight: 600; text-align: right; }
+          .refund-badge { background: #ECFDF3; border: 1px solid #ABEFC6; color: #067647; font-weight: 700; padding: 12px; text-align: center; border-radius: 10px; margin: 24px 0; font-size: 15px; }
+          .footer { background-color: #FAF7F2; padding: 20px; text-align: center; font-size: 12px; color: #676C75; border-top: 1px solid #EBE5DC; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Ticket Cancellation Notice</h1>
+            <p>Your ticket has been cancelled & refund initiated</p>
+          </div>
+          <div class="body">
+            <p>Hello <strong>${recipientName}</strong>,</p>
+            <p>This email confirms that your ticket booking for <strong>${eventTitle}</strong> has been cancelled as requested.</p>
+
+            <div class="alert-box">
+              <h3>Cancellation Confirmed</h3>
+              <p>Your seats have been released back to the event pool, and your QR check-in pass has been invalidated.</p>
+            </div>
+
+            <table class="grid">
+              <tr>
+                <td class="label">Booking Code:</td>
+                <td class="val" style="font-family: monospace; color: #DE5D3B;">${booking.bookingCode}</td>
+              </tr>
+              <tr>
+                <td class="label">Event:</td>
+                <td class="val">${eventTitle}</td>
+              </tr>
+              <tr>
+                <td class="label">Tier / Class:</td>
+                <td class="val">${booking.tierName} (${booking.quantity} Ticket(s))</td>
+              </tr>
+              ${booking.selectedSeats && booking.selectedSeats.length > 0 ? `
+              <tr>
+                <td class="label">Seats Released:</td>
+                <td class="val">${booking.selectedSeats.join(', ')}</td>
+              </tr>
+              ` : ''}
+              <tr>
+                <td class="label">Reason:</td>
+                <td class="val">${reason}</td>
+              </tr>
+              <tr>
+                <td class="label">Refund ID:</td>
+                <td class="val" style="font-family: monospace;">${refundId}</td>
+              </tr>
+            </table>
+
+            <div class="refund-badge">
+              💰 Refund Initiated: ₹${refundAmount}
+              <div style="font-size: 12px; font-weight: normal; margin-top: 4px; color: #085D3A;">
+                Amount will reflect in your original payment method within 5-7 business days.
+              </div>
+            </div>
+
+            <p style="font-size: 13px; color: #676C75; margin-top: 24px;">
+              If you did not request this cancellation or have any questions, please contact our support team immediately.
+            </p>
+          </div>
+          <div class="footer">
+            &copy; ${new Date().getFullYear()} EventBook Platform. All rights reserved.
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const mailOptions = {
+      from: process.env.SMTP_FROM || '"EventBook Platform" <tickets@eventbook.com>',
+      to: recipientEmail,
+      subject: `❌ Ticket Cancelled & Refund Initiated for ${eventTitle} [${booking.bookingCode}]`,
+      html: htmlTemplate,
+    };
+
+    const info = await mailTransporter.sendMail(mailOptions);
+    const testUrl = nodemailer.getTestMessageUrl(info);
+
+    console.log(`✅ Cancellation Email dispatched to ${recipientEmail} (Msg ID: ${info.messageId})`);
+    if (testUrl) {
+      console.log(`🔗 Preview Ethereal Cancellation Email: ${testUrl}`);
+    }
+
+    return {
+      success: true,
+      messageId: info.messageId,
+      previewUrl: testUrl || null,
+    };
+  } catch (error) {
+    console.error('❌ Error dispatching cancellation email:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+module.exports = { sendTicketEmail, sendCancellationEmail };
+

@@ -57,9 +57,30 @@ const bookingSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'confirmed', 'failed', 'refunded'],
+      enum: ['pending', 'confirmed', 'failed', 'refunded', 'cancelled'],
       default: 'pending',
       index: true,
+    },
+    refundId: {
+      type: String,
+      default: null,
+    },
+    refundAmount: {
+      type: Number,
+      default: 0,
+    },
+    refundStatus: {
+      type: String,
+      enum: ['none', 'processed', 'failed', 'mock_processed'],
+      default: 'none',
+    },
+    cancelledAt: {
+      type: Date,
+      default: null,
+    },
+    cancellationReason: {
+      type: String,
+      default: null,
     },
     isCheckedIn: {
       type: Boolean,

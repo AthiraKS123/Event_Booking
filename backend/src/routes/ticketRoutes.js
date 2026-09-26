@@ -7,6 +7,7 @@ const {
   verifyAndCheckInTicket,
   getGatekeeperStats,
   getCheckedInHistory,
+  cancelTicket,
 } = require('../controllers/ticketController');
 
 // Download PDF Ticket (User or Admin)
@@ -14,6 +15,9 @@ router.get('/:id/pdf', authenticate, downloadTicketPDF);
 
 // Resend E-Ticket via Email (User or Admin)
 router.post('/:id/resend-email', authenticate, resendTicketEmail);
+
+// Cancel Confirmed Ticket & Initiate Refund (User or Admin)
+router.post('/:id/cancel', authenticate, cancelTicket);
 
 // Gatekeeper QR / Ticket Check-in Endpoint (Admin / Gatekeeper)
 router.post('/check-in', authenticate, authorize('admin'), verifyAndCheckInTicket);

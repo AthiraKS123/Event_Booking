@@ -1,11 +1,19 @@
 const Booking = require('../src/models/bookingModel');
+const Event = require('../src/models/eventModel');
 const ticketController = require('../src/controllers/ticketController');
 const { generateTicketPDFBuffer } = require('../src/utils/pdfGenerator');
-const { sendTicketEmail } = require('../src/utils/emailService');
+const { sendTicketEmail, sendCancellationEmail } = require('../src/utils/emailService');
 
 jest.mock('../src/models/bookingModel');
+jest.mock('../src/models/eventModel');
 jest.mock('../src/utils/pdfGenerator');
 jest.mock('../src/utils/emailService');
+jest.mock('../src/config/razorpay', () => ({
+  payments: {
+    refund: jest.fn().mockResolvedValue({ id: 'rfnd_mock_123' }),
+  },
+}));
+
 
 describe('Ticket & Gatekeeper Check-In Feature Unit Tests', () => {
   let req, res, next;
@@ -239,4 +247,139 @@ describe('Ticket & Gatekeeper Check-In Feature Unit Tests', () => {
       );
     });
   });
+
+  describe('cancelTicket', () => {
+    it('should cancel confirmed ticket, restore event seats, and process refund', async () => {
+      req.params.id = 'booking_abc';
+      req.user = { id: 'user_123', role: 'user' };
+      req.body = { reason: 'Personal scheduling conflict' };
+
+      const mockBooking = {
+        _id: 'booking_abc',
+        bookingCode: 'EB-CANCEL1',
+        status: 'confirmed',
+        isCheckedIn: false,
+        totalAmount: 1500,
+        quantity: 2,
+        tierId: 'tier_vip',
+        razorpayPaymentId: 'pay_test_999',
+        user: { _id: 'user_123', name: 'Alice', email: 'alice@example.com' },
+        event: {
+          _id: 'event_456',
+          title: 'Future Tech Summit',
+          dateTime: new Date(Date.now() + 86400000), // Tomorrow
+        },
+        save: jest.fn().mockResolvedValue(true),
+      };
+
+      Booking.findById.mockReturnValue({
+        populate: jest.fn().mockReturnValue({
+          populate: jest.fn().mockResolvedValue(mockBooking),
+        }),
+      });
+
+      Event.updateOne.mockResolvedValue({ modifiedCount: 1 });
+      sendCancellationEmail.mockResolvedValue({ success: true });
+
+      await ticketController.cancelTicket(req, res, next);
+
+      expect(Event.updateOne).toHaveBeenCalledWith(
+        { _id: 'event_456', 'ticketTiers._id': 'tier_vip' },
+        { $inc: { 'ticketTiers.$.availableSeats': 2 } }
+      );
+      expect(mockBooking.status).toBe('cancelled');
+      expect(mockBooking.refundAmount).toBe(1500);
+      expect(mockBooking.cancellationReason).toBe('Personal scheduling conflict');
+      expect(mockBooking.save).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          message: expect.stringMatching(/successfully cancelled/i),
+        })
+      );
+    });
+
+    it('should forbid user from cancelling another user ticket', async () => {
+      req.params.id = 'booking_abc';
+      req.user = { id: 'another_user', role: 'user' };
+
+      const mockBooking = {
+        _id: 'booking_abc',
+        status: 'confirmed',
+        user: { _id: 'user_123' },
+        event: { dateTime: new Date(Date.now() + 86400000) },
+      };
+
+      Booking.findById.mockReturnValue({
+        populate: jest.fn().mockReturnValue({
+          populate: jest.fn().mockResolvedValue(mockBooking),
+        }),
+      });
+
+      await ticketController.cancelTicket(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(next).toHaveBeenCalledWith(expect.any(Error));
+      expect(next.mock.calls[0][0].message).toMatch(/Not authorized to cancel this booking/i);
+    });
+
+    it('should reject cancellation if ticket is already checked in at gate', async () => {
+      req.params.id = 'booking_abc';
+      req.user = { id: 'user_123', role: 'user' };
+
+      const mockBooking = {
+        _id: 'booking_abc',
+        status: 'confirmed',
+        isCheckedIn: true,
+        user: { _id: 'user_123' },
+        event: { dateTime: new Date(Date.now() + 86400000) },
+      };
+
+      Booking.findById.mockReturnValue({
+        populate: jest.fn().mockReturnValue({
+          populate: jest.fn().mockResolvedValue(mockBooking),
+        }),
+      });
+
+      await ticketController.cancelTicket(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(next).toHaveBeenCalledWith(expect.any(Error));
+      expect(next.mock.calls[0][0].message).toMatch(/already checked in/i);
+    });
+
+    it('should allow cancellation for un-checked-in ticket even if event date is past', async () => {
+      req.params.id = 'booking_abc';
+      req.user = { id: 'user_123', role: 'user' };
+
+      const mockBooking = {
+        _id: 'booking_abc',
+        bookingCode: 'EB-PAST1',
+        status: 'confirmed',
+        isCheckedIn: false,
+        totalAmount: 500,
+        quantity: 1,
+        tierId: 'tier_gen',
+        user: { _id: 'user_123', name: 'Alice', email: 'alice@example.com' },
+        event: { _id: 'event_999', dateTime: new Date(Date.now() - 86400000) }, // Past date
+        save: jest.fn().mockResolvedValue(true),
+      };
+
+      Booking.findById.mockReturnValue({
+        populate: jest.fn().mockReturnValue({
+          populate: jest.fn().mockResolvedValue(mockBooking),
+        }),
+      });
+
+      Event.updateOne.mockResolvedValue({ modifiedCount: 1 });
+      sendCancellationEmail.mockResolvedValue({ success: true });
+
+      await ticketController.cancelTicket(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(mockBooking.status).toBe('cancelled');
+    });
+  });
 });
+

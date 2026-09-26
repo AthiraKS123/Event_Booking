@@ -214,7 +214,10 @@ const handleWebhook = async (req, res, next) => {
  */
 const getMyBookings = async (req, res, next) => {
   try {
-    const bookings = await Booking.find({ user: req.user.id, status: 'confirmed' })
+    const bookings = await Booking.find({
+      user: req.user.id,
+      status: { $in: ['confirmed', 'cancelled', 'refunded'] },
+    })
       .populate('event', 'title venue dateTime category bannerImage')
       .sort({ createdAt: -1 });
 
