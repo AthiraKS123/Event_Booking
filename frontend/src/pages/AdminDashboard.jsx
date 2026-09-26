@@ -186,22 +186,22 @@ export default function AdminDashboard() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-8 rounded-3xl bg-white border border-[#EBE5DC] shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-8 rounded-3xl bg-white dark:bg-[#141B26] border border-[#EBE5DC] dark:border-[#283548] shadow-xs transition-colors">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF7F2] text-[#DE5D3B] border border-[#DE5D3B]/20 text-xs font-bold mb-2 shadow-xs">
-            <ShieldCheck className="w-4 h-4 text-[#DE5D3B]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF7F2] dark:bg-[#1E2838] text-[#DE5D3B] dark:text-[#FF6B4A] border border-[#DE5D3B]/20 dark:border-[#FF6B4A]/30 text-xs font-bold mb-2 shadow-xs transition-colors">
+            <ShieldCheck className="w-4 h-4 text-[#DE5D3B] dark:text-[#FF6B4A]" />
             Protected Admin & Gatekeeper Dashboard
           </div>
-          <h1 className="text-2xl font-bold text-[#1C2434]">Admin Management Console</h1>
-          <p className="text-[#676C75] text-sm">Manage events, monitor live inventory, and verify attendee QR entry passes</p>
+          <h1 className="text-2xl font-bold text-[#1C2434] dark:text-[#F3F5F9] transition-colors">Admin Management Console</h1>
+          <p className="text-[#676C75] dark:text-[#94A3B8] text-sm transition-colors">Manage events, monitor live inventory, and verify attendee QR entry passes</p>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex bg-[#FAF7F2] p-1 rounded-2xl border border-[#EBE5DC] shrink-0 shadow-xs">
+        <div className="flex bg-[#FAF7F2] dark:bg-[#1E2838] p-1 rounded-2xl border border-[#EBE5DC] dark:border-[#283548] shrink-0 shadow-xs transition-colors">
           <button
             onClick={() => setActiveTab('events')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'events' ? 'bg-[#DE5D3B] text-white shadow-xs' : 'text-[#676C75] hover:text-[#DE5D3B]'
+              activeTab === 'events' ? 'bg-[#DE5D3B] dark:bg-[#FF6B4A] text-white shadow-xs' : 'text-[#676C75] dark:text-[#94A3B8] hover:text-[#DE5D3B] dark:hover:text-[#FF6B4A]'
             }`}
           >
             Events & Inventory
@@ -209,7 +209,7 @@ export default function AdminDashboard() {
           <button
             onClick={() => setActiveTab('gatekeeper')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'gatekeeper' ? 'bg-[#DE5D3B] text-white shadow-xs' : 'text-[#676C75] hover:text-[#DE5D3B]'
+              activeTab === 'gatekeeper' ? 'bg-[#DE5D3B] dark:bg-[#FF6B4A] text-white shadow-xs' : 'text-[#676C75] dark:text-[#94A3B8] hover:text-[#DE5D3B] dark:hover:text-[#FF6B4A]'
             }`}
           >
             <QrCode className="w-3.5 h-3.5" />
@@ -219,15 +219,15 @@ export default function AdminDashboard() {
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 flex items-center gap-3 text-sm">
+        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 text-red-800 dark:text-red-300 flex items-center gap-3 text-sm">
           <XCircle className="w-5 h-5 text-red-500 shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-3 text-sm">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+        <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 text-emerald-800 dark:text-emerald-300 flex items-center gap-3 text-sm">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -235,21 +235,21 @@ export default function AdminDashboard() {
       {/* TAB 1: GATEKEEPER CHECK-IN SYSTEM */}
       {activeTab === 'gatekeeper' && (
         <div className="space-y-6">
-          <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#EBE5DC] shadow-xs space-y-6">
+          <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#141B26] border border-[#EBE5DC] dark:border-[#283548] shadow-xs space-y-6 transition-colors">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-lg font-bold text-[#1C2434] flex items-center gap-2">
-                  <UserCheck className="w-5 h-5 text-[#DE5D3B]" />
+                <h3 className="text-lg font-bold text-[#1C2434] dark:text-[#F3F5F9] flex items-center gap-2 transition-colors">
+                  <UserCheck className="w-5 h-5 text-[#DE5D3B] dark:text-[#FF6B4A]" />
                   Gatekeeper Venue Entrance Check-In
                 </h3>
-                <p className="text-xs text-[#676C75]">Scan ticket QR codes via live camera or enter code manually</p>
+                <p className="text-xs text-[#676C75] dark:text-[#94A3B8] transition-colors">Scan ticket QR codes via live camera or enter code manually</p>
               </div>
 
               {/* Action Button to launch live camera scanner */}
               <button
                 type="button"
                 onClick={() => setIsScannerOpen(true)}
-                className="px-5 py-2.5 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer transform hover:scale-[1.02]"
+                className="px-5 py-2.5 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] dark:bg-[#FF6B4A] dark:hover:bg-[#E55A3A] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer transform hover:scale-[1.02]"
               >
                 <Camera className="w-4 h-4 text-white" />
                 <span>📷 Open Live Camera QR Scanner</span>
@@ -264,14 +264,14 @@ export default function AdminDashboard() {
                   placeholder="Enter Ticket Booking Code (e.g. EB-X7A89) or paste QR payload..."
                   value={checkInCode}
                   onChange={(e) => setCheckInCode(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-[#EBE5DC] text-[#1C2434] text-sm font-mono placeholder:font-sans focus:outline-none focus:border-[#DE5D3B]"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl bg-white dark:bg-[#1E2838] border border-[#EBE5DC] dark:border-[#283548] text-[#1C2434] dark:text-[#F3F5F9] placeholder-[#94A3B8] text-sm font-mono placeholder:font-sans focus:outline-none focus:border-[#DE5D3B] dark:focus:border-[#FF6B4A] transition-colors"
                   required
                 />
               </div>
               <button
                 type="submit"
                 disabled={checkInLoading}
-                className="px-6 py-3 rounded-xl bg-[#FAF7F2] hover:bg-[#FDF2EC] text-[#DE5D3B] font-extrabold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all border border-[#DE5D3B]/20 shadow-xs disabled:opacity-50"
+                className="px-6 py-3 rounded-xl bg-[#FAF7F2] dark:bg-[#1E2838] hover:bg-[#FDF2EC] dark:hover:bg-[#283548] text-[#DE5D3B] dark:text-[#FF6B4A] font-extrabold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all border border-[#DE5D3B]/20 dark:border-[#FF6B4A]/30 shadow-xs disabled:opacity-50"
               >
                 {checkInLoading ? 'Verifying Ticket...' : 'Verify & Grant Entry'}
               </button>
@@ -281,55 +281,55 @@ export default function AdminDashboard() {
             {scanResult && (
               <div className="animate-scaleUp">
                 {scanResult.status === 'SUCCESS' && (
-                  <div className="p-6 rounded-2xl bg-emerald-50 border-2 border-emerald-400 text-emerald-950 space-y-3 shadow-sm">
+                  <div className="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-600 text-emerald-950 dark:text-emerald-100 space-y-3 shadow-sm transition-colors">
                     <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-8 h-8 text-emerald-600 shrink-0" />
+                      <CheckCircle2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400 shrink-0" />
                       <div>
-                        <div className="text-xl font-bold text-emerald-900">🎉 ENTRY GRANTED!</div>
-                        <div className="text-xs text-emerald-800">{scanResult.message}</div>
+                        <div className="text-xl font-bold text-emerald-900 dark:text-emerald-200">🎉 ENTRY GRANTED!</div>
+                        <div className="text-xs text-emerald-800 dark:text-emerald-300">{scanResult.message}</div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 rounded-xl bg-white border border-emerald-200 text-xs">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 rounded-xl bg-white dark:bg-[#141B26] border border-emerald-200 dark:border-emerald-800 text-xs transition-colors">
                       <div>
-                        <span className="text-emerald-700 block text-[10px] uppercase font-bold">Attendee Name</span>
-                        <span className="font-bold text-emerald-950">{scanResult.booking.attendeeName}</span>
+                        <span className="text-emerald-700 dark:text-emerald-400 block text-[10px] uppercase font-bold">Attendee Name</span>
+                        <span className="font-bold text-emerald-950 dark:text-emerald-100">{scanResult.booking.attendeeName}</span>
                       </div>
                       <div>
-                        <span className="text-emerald-700 block text-[10px] uppercase font-bold">Event Title</span>
-                        <span className="font-bold text-emerald-950">{scanResult.booking.eventTitle}</span>
+                        <span className="text-emerald-700 dark:text-emerald-400 block text-[10px] uppercase font-bold">Event Title</span>
+                        <span className="font-bold text-emerald-950 dark:text-emerald-100">{scanResult.booking.eventTitle}</span>
                       </div>
                       <div>
-                        <span className="text-emerald-700 block text-[10px] uppercase font-bold">Ticket Tier & Seats</span>
-                        <span className="font-bold text-emerald-950">{scanResult.booking.tierName} ({scanResult.booking.quantity} seats)</span>
+                        <span className="text-emerald-700 dark:text-emerald-400 block text-[10px] uppercase font-bold">Ticket Tier & Seats</span>
+                        <span className="font-bold text-emerald-950 dark:text-emerald-100">{scanResult.booking.tierName} ({scanResult.booking.quantity} seats)</span>
                       </div>
                       <div>
-                        <span className="text-emerald-700 block text-[10px] uppercase font-bold">Check-In Time</span>
-                        <span className="font-bold text-emerald-950">{new Date(scanResult.booking.checkedInAt).toLocaleTimeString()}</span>
+                        <span className="text-emerald-700 dark:text-emerald-400 block text-[10px] uppercase font-bold">Check-In Time</span>
+                        <span className="font-bold text-emerald-950 dark:text-emerald-100">{new Date(scanResult.booking.checkedInAt).toLocaleTimeString()}</span>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {scanResult.status === 'DUPLICATE' && (
-                  <div className="p-6 rounded-2xl bg-amber-50 border-2 border-amber-400 text-amber-950 space-y-3 shadow-sm">
+                  <div className="p-6 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-400 dark:border-amber-600 text-amber-950 dark:text-amber-100 space-y-3 shadow-sm transition-colors">
                     <div className="flex items-center gap-3">
-                      <AlertTriangle className="w-8 h-8 text-amber-600 shrink-0" />
+                      <AlertTriangle className="w-8 h-8 text-amber-600 dark:text-amber-400 shrink-0" />
                       <div>
-                        <div className="text-xl font-bold text-amber-900">⚠️ DUPLICATE ENTRY ATTEMPT DETECTED!</div>
-                        <div className="text-xs text-amber-800">{scanResult.message}</div>
+                        <div className="text-xl font-bold text-amber-900 dark:text-amber-200">⚠️ DUPLICATE ENTRY ATTEMPT DETECTED!</div>
+                        <div className="text-xs text-amber-800 dark:text-amber-300">{scanResult.message}</div>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {scanResult.status === 'INVALID' && (
-                  <div className="p-6 rounded-2xl bg-red-50 border-2 border-red-400 text-red-950 space-y-2 shadow-sm">
+                  <div className="p-6 rounded-2xl bg-red-50 dark:bg-red-950/40 border-2 border-red-400 dark:border-red-600 text-red-950 dark:text-red-100 space-y-2 shadow-sm transition-colors">
                     <div className="flex items-center gap-3">
-                      <XCircle className="w-8 h-8 text-red-600 shrink-0" />
+                      <XCircle className="w-8 h-8 text-red-600 dark:text-red-400 shrink-0" />
                       <div>
-                        <div className="text-xl font-bold text-red-900">🛑 INVALID TICKET / ACCESS DENIED</div>
-                        <div className="text-xs text-red-800">{scanResult.message}</div>
+                        <div className="text-xl font-bold text-red-900 dark:text-red-200">🛑 INVALID TICKET / ACCESS DENIED</div>
+                        <div className="text-xs text-red-800 dark:text-red-300">{scanResult.message}</div>
                       </div>
                     </div>
                   </div>
@@ -340,23 +340,23 @@ export default function AdminDashboard() {
 
           {/* Scan History Feed */}
           {scanHistory.length > 0 && (
-            <div className="p-6 rounded-3xl bg-white border border-[#EBE5DC] shadow-xs space-y-4">
-              <h4 className="text-sm font-bold text-[#1C2434] flex items-center gap-2">
-                <Activity className="w-4 h-4 text-[#DE5D3B]" />
+            <div className="p-6 rounded-3xl bg-white dark:bg-[#141B26] border border-[#EBE5DC] dark:border-[#283548] shadow-xs space-y-4 transition-colors">
+              <h4 className="text-sm font-bold text-[#1C2434] dark:text-[#F3F5F9] flex items-center gap-2 transition-colors">
+                <Activity className="w-4 h-4 text-[#DE5D3B] dark:text-[#FF6B4A]" />
                 Live Gate Scan History Feed ({scanHistory.length})
               </h4>
               <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                 {scanHistory.map((scan, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center justify-between p-3 rounded-xl bg-[#FAF7F2] border border-[#EBE5DC] text-xs font-semibold text-[#1C2434]"
+                    className="flex items-center justify-between p-3 rounded-xl bg-[#FAF7F2] dark:bg-[#1E2838] border border-[#EBE5DC] dark:border-[#283548] text-xs font-semibold text-[#1C2434] dark:text-[#F3F5F9] transition-colors"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-[#DE5D3B] font-bold">{scan.bookingCode || scan.booking?.bookingCode}</span>
+                      <span className="font-mono text-[#DE5D3B] dark:text-[#FF6B4A] font-bold">{scan.bookingCode || scan.booking?.bookingCode}</span>
                       <span>•</span>
                       <span>{scan.status}</span>
                     </div>
-                    <span className="text-[#676C75] text-[10px]">{scan.timestamp}</span>
+                    <span className="text-[#676C75] dark:text-[#94A3B8] text-[10px]">{scan.timestamp}</span>
                   </div>
                 ))}
               </div>
@@ -369,13 +369,13 @@ export default function AdminDashboard() {
       {activeTab === 'events' && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-[#1C2434] flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#DE5D3B]" />
+            <h2 className="text-lg font-bold text-[#1C2434] dark:text-[#F3F5F9] flex items-center gap-2 transition-colors">
+              <Sparkles className="w-5 h-5 text-[#DE5D3B] dark:text-[#FF6B4A]" />
               Published Events Catalog ({events.length})
             </h2>
             <button
               onClick={() => setShowForm(!showForm)}
-              className="px-4 py-2 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] text-white font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+              className="px-4 py-2 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] dark:bg-[#FF6B4A] dark:hover:bg-[#E55A3A] text-white font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
             >
               <Plus className="w-4 h-4 text-white" />
               {showForm ? 'Cancel Form' : 'Publish New Event'}
@@ -384,85 +384,85 @@ export default function AdminDashboard() {
 
           {/* Create Event Form Modal / Expandable Card */}
           {showForm && (
-            <div className="p-6 rounded-3xl bg-white border border-[#EBE5DC] shadow-sm space-y-4 animate-fadeIn">
-              <h3 className="text-base font-bold text-[#1C2434]">Publish New Event with Tier Capacities</h3>
+            <div className="p-6 rounded-3xl bg-white dark:bg-[#141B26] border border-[#EBE5DC] dark:border-[#283548] shadow-sm space-y-4 animate-fadeIn transition-colors">
+              <h3 className="text-base font-bold text-[#1C2434] dark:text-[#F3F5F9]">Publish New Event with Tier Capacities</h3>
               <form onSubmit={handleCreateEvent} className="space-y-4 text-xs">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[#1C2434] mb-1 font-bold">Event Title</label>
+                    <label className="block text-[#1C2434] dark:text-[#F3F5F9] mb-1 font-bold">Event Title</label>
                     <input
                       type="text"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-white border border-[#EBE5DC] text-[#1C2434] text-sm focus:outline-none focus:border-[#DE5D3B]"
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#1E2838] border border-[#EBE5DC] dark:border-[#283548] text-[#1C2434] dark:text-[#F3F5F9] text-sm focus:outline-none focus:border-[#DE5D3B] dark:focus:border-[#FF6B4A] transition-colors"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-[#1C2434] mb-1 font-bold">Venue Location</label>
+                    <label className="block text-[#1C2434] dark:text-[#F3F5F9] mb-1 font-bold">Venue Location</label>
                     <input
                       type="text"
                       value={venue}
                       onChange={(e) => setVenue(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-white border border-[#EBE5DC] text-[#1C2434] text-sm focus:outline-none focus:border-[#DE5D3B]"
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#1E2838] border border-[#EBE5DC] dark:border-[#283548] text-[#1C2434] dark:text-[#F3F5F9] text-sm focus:outline-none focus:border-[#DE5D3B] dark:focus:border-[#FF6B4A] transition-colors"
                       required
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[#1C2434] mb-1 font-bold">Description</label>
+                  <label className="block text-[#1C2434] dark:text-[#F3F5F9] mb-1 font-bold">Description</label>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-white border border-[#EBE5DC] text-[#1C2434] text-sm focus:outline-none focus:border-[#DE5D3B]"
+                    className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#1E2838] border border-[#EBE5DC] dark:border-[#283548] text-[#1C2434] dark:text-[#F3F5F9] text-sm focus:outline-none focus:border-[#DE5D3B] dark:focus:border-[#FF6B4A] transition-colors"
                     rows="2"
                     required
                   />
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-[#FAF7F2] border border-[#EBE5DC]">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-[#FAF7F2] dark:bg-[#1E2838] border border-[#EBE5DC] dark:border-[#283548] transition-colors">
                   <div>
-                    <label className="block text-[#676C75] mb-1 font-bold">VIP Price (₹)</label>
+                    <label className="block text-[#676C75] dark:text-[#94A3B8] mb-1 font-bold">VIP Price (₹)</label>
                     <input
                       type="number"
                       value={vipPrice}
                       onChange={(e) => setVipPrice(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#EBE5DC] text-[#1C2434] font-bold focus:border-[#DE5D3B]"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-[#141B26] border border-[#EBE5DC] dark:border-[#283548] text-[#1C2434] dark:text-[#F3F5F9] font-bold focus:border-[#DE5D3B] dark:focus:border-[#FF6B4A] transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-[#676C75] mb-1 font-bold">VIP Capacity</label>
+                    <label className="block text-[#676C75] dark:text-[#94A3B8] mb-1 font-bold">VIP Capacity</label>
                     <input
                       type="number"
                       value={vipCapacity}
                       onChange={(e) => setVipCapacity(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#EBE5DC] text-[#1C2434] font-bold focus:border-[#DE5D3B]"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-[#141B26] border border-[#EBE5DC] dark:border-[#283548] text-[#1C2434] dark:text-[#F3F5F9] font-bold focus:border-[#DE5D3B] dark:focus:border-[#FF6B4A] transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-[#676C75] mb-1 font-bold">General Price (₹)</label>
+                    <label className="block text-[#676C75] dark:text-[#94A3B8] mb-1 font-bold">General Price (₹)</label>
                     <input
                       type="number"
                       value={genPrice}
                       onChange={(e) => setGenPrice(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#EBE5DC] text-[#1C2434] font-bold focus:border-[#DE5D3B]"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-[#141B26] border border-[#EBE5DC] dark:border-[#283548] text-[#1C2434] dark:text-[#F3F5F9] font-bold focus:border-[#DE5D3B] dark:focus:border-[#FF6B4A] transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-[#676C75] mb-1 font-bold">General Capacity</label>
+                    <label className="block text-[#676C75] dark:text-[#94A3B8] mb-1 font-bold">General Capacity</label>
                     <input
                       type="number"
                       value={genCapacity}
                       onChange={(e) => setGenCapacity(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[#EBE5DC] text-[#1C2434] font-bold focus:border-[#DE5D3B]"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-[#141B26] border border-[#EBE5DC] dark:border-[#283548] text-[#1C2434] dark:text-[#F3F5F9] font-bold focus:border-[#DE5D3B] dark:focus:border-[#FF6B4A] transition-colors"
                     />
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] text-white font-bold text-sm shadow-xs cursor-pointer transition-all"
+                  className="w-full py-3 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] dark:bg-[#FF6B4A] dark:hover:bg-[#E55A3A] text-white font-bold text-sm shadow-xs cursor-pointer transition-all"
                 >
                   Confirm & Create Event
                 </button>
@@ -473,46 +473,46 @@ export default function AdminDashboard() {
           {/* Events Catalog Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {events.map((event) => (
-              <div key={event._id} className="bg-white rounded-3xl overflow-hidden border border-[#EBE5DC] shadow-xs p-6 flex flex-col justify-between space-y-4">
+              <div key={event._id} className="bg-white dark:bg-[#141B26] rounded-3xl overflow-hidden border border-[#EBE5DC] dark:border-[#283548] shadow-xs p-6 flex flex-col justify-between space-y-4 transition-colors">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-[#1C2434]">{event.title}</h3>
+                    <h3 className="text-lg font-bold text-[#1C2434] dark:text-[#F3F5F9]">{event.title}</h3>
                     <button
                       onClick={() => handleDeleteEvent(event._id)}
-                      className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors cursor-pointer"
+                      className="p-2 rounded-xl bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/60 transition-colors cursor-pointer"
                       title="Delete Event"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
 
-                  <div className="space-y-1 text-xs text-[#676C75]">
+                  <div className="space-y-1 text-xs text-[#676C75] dark:text-[#94A3B8]">
                     <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-[#DE5D3B] shrink-0" />
+                      <MapPin className="w-3.5 h-3.5 text-[#DE5D3B] dark:text-[#FF6B4A] shrink-0" />
                       <span className="font-medium">{event.venue}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-[#DE5D3B] shrink-0" />
+                      <Calendar className="w-3.5 h-3.5 text-[#DE5D3B] dark:text-[#FF6B4A] shrink-0" />
                       <span className="font-medium">{new Date(event.dateTime).toLocaleDateString()}</span>
                     </div>
                   </div>
 
-                  <div className="space-y-2 pt-2 border-t border-[#EBE5DC] text-xs">
-                    <div className="text-[10px] font-bold text-[#676C75] uppercase tracking-wider">Live Inventory Status</div>
+                  <div className="space-y-2 pt-2 border-t border-[#EBE5DC] dark:border-[#283548] text-xs">
+                    <div className="text-[10px] font-bold text-[#676C75] dark:text-[#94A3B8] uppercase tracking-wider">Live Inventory Status</div>
                     {event.ticketTiers.map((tier) => (
-                      <div key={tier._id} className="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl bg-[#FAF7F2] border border-[#EBE5DC] gap-2">
+                      <div key={tier._id} className="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl bg-[#FAF7F2] dark:bg-[#1E2838] border border-[#EBE5DC] dark:border-[#283548] gap-2 transition-colors">
                         <div>
-                          <span className="font-bold text-[#1C2434]">{tier.name}</span>
-                          <span className="text-[#DE5D3B] font-black text-[11px] ml-2">₹{tier.price}</span>
+                          <span className="font-bold text-[#1C2434] dark:text-[#F3F5F9]">{tier.name}</span>
+                          <span className="text-[#DE5D3B] dark:text-[#FF6B4A] font-black text-[11px] ml-2">₹{tier.price}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[#676C75] font-medium text-[11px]">
+                          <span className="text-[#676C75] dark:text-[#94A3B8] font-medium text-[11px]">
                             {tier.availableSeats} / {tier.totalSeats} left
                           </span>
                           <button
                             type="button"
                             onClick={() => handleAddSeats(event, tier._id, 10)}
-                            className="px-2.5 py-1 rounded-lg bg-[#DE5D3B] hover:bg-[#C84E2E] text-white text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                            className="px-2.5 py-1 rounded-lg bg-[#DE5D3B] hover:bg-[#C84E2E] dark:bg-[#FF6B4A] dark:hover:bg-[#E55A3A] text-white text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs"
                             title="Add 10 seats to this tier"
                           >
                             <Plus className="w-3 h-3" /> +10 Seats

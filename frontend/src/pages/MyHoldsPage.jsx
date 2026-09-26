@@ -139,68 +139,68 @@ export default function MyHoldsPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#1C2434] tracking-tight flex items-center gap-2">
-            <Zap className="w-5 h-5 text-[#DE5D3B]" />
+          <h1 className="text-2xl font-bold text-[#1C2434] dark:text-[#F3F5F9] tracking-tight flex items-center gap-2">
+            <Zap className="w-5 h-5 text-[#DE5D3B] dark:text-[#FF6B4A]" />
             My Active 10-Minute Seat Holds
           </h1>
-          <p className="text-[#676C75] text-xs">
+          <p className="text-[#676C75] dark:text-[#94A3B8] text-xs">
             Background cron sweeper checks every 60s to auto-release holds past 10 minutes
           </p>
         </div>
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 flex items-center gap-3">
+        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 text-red-800 dark:text-red-300 flex items-center gap-3">
           <XCircle className="w-5 h-5 text-red-500 shrink-0" />
           <span className="text-sm font-medium">{errorMsg}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-3">
+        <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 text-emerald-800 dark:text-emerald-300 flex items-center gap-3">
           <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
           <span className="text-sm font-medium">{successMsg}</span>
         </div>
       )}
 
       {loading ? (
-        <div className="text-center py-20 text-[#676C75]">Loading Active Holds...</div>
+        <div className="text-center py-20 text-[#676C75] dark:text-[#94A3B8]">Loading Active Holds...</div>
       ) : activeHolds.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl glass-panel border border-[#EBE5DC] space-y-3 shadow-xs bg-white">
-          <p className="text-[#676C75] text-sm">You currently have no active seat holds.</p>
+        <div className="p-12 text-center rounded-2xl glass-panel border border-[#EBE5DC] dark:border-[#283548] space-y-3 shadow-xs bg-white dark:bg-[#141B26]">
+          <p className="text-[#676C75] dark:text-[#94A3B8] text-sm">You currently have no active seat holds.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {activeHolds.map((hold) => (
-            <div key={hold._id} className="p-5 rounded-2xl glass-panel border border-[#EBE5DC] shadow-xs bg-white flex flex-col justify-between gap-4">
+            <div key={hold._id} className="p-5 rounded-2xl glass-panel border border-[#EBE5DC] dark:border-[#283548] shadow-xs bg-white dark:bg-[#141B26] flex flex-col justify-between gap-4">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="font-bold text-[#1C2434] text-base">{hold.event?.title || 'Event'}</span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#FAF7F2] text-[#DE5D3B] font-bold text-xs border border-[#DE5D3B]/20">
+                  <span className="font-bold text-[#1C2434] dark:text-[#F3F5F9] text-base">{hold.event?.title || 'Event'}</span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#FAF7F2] dark:bg-[#1E2838] text-[#DE5D3B] dark:text-[#FF6B4A] font-bold text-xs border border-[#DE5D3B]/20 dark:border-[#FF6B4A]/30">
                     {hold.tierName} x {hold.quantity} Seats
                   </span>
                 </div>
-                <div className="text-xs text-[#676C75] space-y-1">
-                  <div>Price per seat: <span className="text-[#1C2434] font-bold">₹{hold.pricePerSeat}</span></div>
-                  <div>Total Amount: <span className="text-[#DE5D3B] font-black text-base">₹{hold.totalAmount}</span></div>
+                <div className="text-xs text-[#676C75] dark:text-[#94A3B8] space-y-1">
+                  <div>Price per seat: <span className="text-[#1C2434] dark:text-[#F3F5F9] font-bold">₹{hold.pricePerSeat}</span></div>
+                  <div>Total Amount: <span className="text-[#DE5D3B] dark:text-[#FF6B4A] font-black text-base">₹{hold.totalAmount}</span></div>
                 </div>
               </div>
 
-              <div className="space-y-3 pt-3 border-t border-[#EBE5DC]">
+              <div className="space-y-3 pt-3 border-t border-[#EBE5DC] dark:border-[#283548]">
                 <HoldTimer expiresAt={hold.expiresAt} onExpire={fetchMyHolds} />
 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleInitiatePayment(hold)}
                     disabled={paying}
-                    className="flex-1 py-2.5 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+                    className="flex-1 py-2.5 rounded-xl bg-[#DE5D3B] hover:bg-[#C84E2E] dark:bg-[#FF6B4A] dark:hover:bg-[#E85535] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
                   >
                     <CreditCard className="w-4 h-4 text-white" />
                     {paying ? 'Opening Razorpay...' : `Pay ₹${hold.totalAmount}`}
                   </button>
                   <button
                     onClick={() => handleCancelHold(hold._id)}
-                    className="px-3.5 py-2.5 rounded-xl bg-white hover:bg-gray-50 text-[#676C75] hover:text-red-700 border border-gray-200 text-xs font-semibold cursor-pointer"
+                    className="px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#1E2838] hover:bg-gray-50 dark:hover:bg-[#283548] text-[#676C75] dark:text-[#CBD5E1] hover:text-red-700 dark:hover:text-red-400 border border-gray-200 dark:border-[#283548] text-xs font-semibold cursor-pointer"
                   >
                     Release
                   </button>
@@ -210,6 +210,7 @@ export default function MyHoldsPage() {
           ))}
         </div>
       )}
+
     </div>
   );
 }
