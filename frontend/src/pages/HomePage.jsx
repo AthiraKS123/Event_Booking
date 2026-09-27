@@ -131,7 +131,7 @@ export default function HomePage() {
         <div className="relative z-10 max-w-2xl space-y-4">
           <h1 className="text-3xl sm:text-5xl font-black text-[#1C2434] dark:text-[#F3F5F9] tracking-tight leading-tight">
             Discover & Book Events with Zero{' '}
-            <span className="text-[#DE5D3B] dark:text-[#FF6B4A] underline decoration-[#DE5D3B]/40 dark:decoration-[#FF6B4A]/40 decoration-wavy decoration-2">
+            <span className="text-[#DE5D3B] dark:text-[#FF6B4A]">
               Double-Booking
             </span>
           </h1>
